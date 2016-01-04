@@ -1,6 +1,5 @@
 package io.darwin;
 
-import com.sun.org.apache.bcel.internal.util.Objects;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import io.darwin.harness.CurrentExecutionHarness;
@@ -10,6 +9,7 @@ import io.darwin.result.ComparisonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Evolution {
@@ -105,7 +105,8 @@ public class Evolution {
 
                 }
             }
-        }
+            return null;
+         }
 
         private ExecutionResult<T> getConfiguredExecutionResult(ExecutionResult<T> currentExecutionResult, ExecutionResult<T> evolvedExecutionResult) {
             Config config = ConfigFactory.load();
