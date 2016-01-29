@@ -21,8 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.darwin.harness;
+package io.darwin.execution.result;
 
-public abstract class CurrentExecutionHarness<T> extends ExecutionHarness<T> {
+public enum ResultType {
 
+    OK,
+    OK_EXCEPTIONS,
+    ERROR_DIFFERENT_EXCEPTIONS,
+    ERROR_DIFFERENT_RESULTS,
+    ERROR_EXCEPTION_VS_RESULT;
 }

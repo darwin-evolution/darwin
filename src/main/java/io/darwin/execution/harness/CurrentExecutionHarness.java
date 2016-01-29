@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.darwin.harness;
+package io.darwin.execution.harness;
 
-public abstract class EvolvedExecutionHarness<T> extends ExecutionHarness<T> {
+public abstract class CurrentExecutionHarness<T> extends ExecutionHarness<T> {
 
 }

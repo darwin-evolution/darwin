@@ -21,14 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.darwin.result;
+package io.darwin.execution.result.comparison;
+
+import io.darwin.execution.ImplementationPreferenceType;
+import io.darwin.execution.result.ResultType;
 
 import java.io.Serializable;
 
 public class ComparisonResult<T> implements Serializable {
 
     private String name;
-    private ImplementationPreference implementationPreference;
+    private ImplementationPreferenceType implementationPreferenceType;
     private Object[] arguments;
 
     private T currentImplementationResult;
@@ -42,9 +45,9 @@ public class ComparisonResult<T> implements Serializable {
     private ResultType resultType;
 
 
-    public ComparisonResult(String name, ImplementationPreference implementationPreference, Object[] arguments, T currentImplementationResult, long currentImplementationExecutionTime, Exception currentImplementationException, T evolvedImplementationResult, long evolvedImplementationExecutionTime, Exception evolvedImplementationException, ResultType resultType) {
+    public ComparisonResult(String name, ImplementationPreferenceType implementationPreferenceType, Object[] arguments, T currentImplementationResult, long currentImplementationExecutionTime, Exception currentImplementationException, T evolvedImplementationResult, long evolvedImplementationExecutionTime, Exception evolvedImplementationException, ResultType resultType) {
         this.name = name;
-        this.implementationPreference = implementationPreference;
+        this.implementationPreferenceType = implementationPreferenceType;
         this.arguments = arguments;
         this.currentImplementationResult = currentImplementationResult;
         this.currentImplementationExecutionTime = currentImplementationExecutionTime;
@@ -59,8 +62,8 @@ public class ComparisonResult<T> implements Serializable {
         return name;
     }
 
-    public ImplementationPreference getImplementationPreference() {
-        return implementationPreference;
+    public ImplementationPreferenceType getImplementationPreferenceType() {
+        return implementationPreferenceType;
     }
 
     public Object[] getArguments() {

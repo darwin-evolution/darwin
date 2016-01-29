@@ -21,10 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.darwin.result;
+package io.darwin.execution.harness;
 
-public enum ImplementationPreference {
+public abstract class ExecutionHarness<T> {
 
-    CURRENT, EVOLVED;
+    private  Object[] arguments = new Object[0];
+
+    protected void arguments(Object ...arguments) {
+        this.arguments = arguments;
+    }
+
+    public Object[] getArguments() {
+        return this.arguments;
+    }
+
+    public abstract T execute() throws Exception;
 
 }

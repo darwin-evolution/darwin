@@ -21,7 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.darwin;
+package io.darwin.async;
+
+import io.darwin.Evolution;
 
 import java.util.concurrent.TimeUnit;
 
