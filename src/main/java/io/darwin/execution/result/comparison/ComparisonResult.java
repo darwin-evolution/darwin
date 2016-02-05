@@ -24,6 +24,7 @@
 package io.darwin.execution.result.comparison;
 
 import io.darwin.execution.ImplementationPreferenceType;
+import io.darwin.execution.result.ExecutionResult;
 import io.darwin.execution.result.ResultType;
 
 import java.io.Serializable;
@@ -44,6 +45,9 @@ public class ComparisonResult<T> implements Serializable {
 
     private ResultType resultType;
 
+    public ComparisonResult(String name, ImplementationPreferenceType implementationPreferenceType, Object[] arguments, ExecutionResult<T> currentExecutionResult, ExecutionResult<T> evolvedExecutionResult, ResultType resultType) {
+        this(name, implementationPreferenceType, arguments,currentExecutionResult.getResult(), currentExecutionResult.getExecutionTime(), currentExecutionResult.getException(), evolvedExecutionResult.getResult(), evolvedExecutionResult.getExecutionTime(), evolvedExecutionResult.getException(), resultType);
+    }
 
     public ComparisonResult(String name, ImplementationPreferenceType implementationPreferenceType, Object[] arguments, T currentImplementationResult, long currentImplementationExecutionTime, Exception currentImplementationException, T evolvedImplementationResult, long evolvedImplementationExecutionTime, Exception evolvedImplementationException, ResultType resultType) {
         this.name = name;

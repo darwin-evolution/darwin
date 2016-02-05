@@ -31,9 +31,13 @@ import io.darwin.execution.ImplementationPreferenceType;
 import io.darwin.execution.harness.CurrentExecutionHarness;
 import io.darwin.execution.harness.EvolvedExecutionHarness;
 import io.darwin.execution.result.ExecutionResult;
+import io.darwin.execution.result.ResultType;
+import io.darwin.execution.result.comparison.ComparisonResult;
+import io.darwin.execution.result.comparison.ResultComparator;
 import io.darwin.slf4j.Slf4jEvolutionResultConsumer;
 import io.darwin.typesafeconfig.TypesafeConfigImplementationChooser;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Evolution {
@@ -67,12 +71,14 @@ public class Evolution {
         private CurrentExecutionHarness<T> currentExecutionHarness;
         private EvolvedExecutionHarness<T> evolvedExecutionHarness;
         private HarnessExecutor<T> harnessExecutor;
+        private ResultComparator<T> resultComparator;
 
         public EvolutionBuilder(EvolutionContext<T> evolutionContext, CurrentExecutionHarness<T> currentExecutionHarness, EvolvedExecutionHarness<T> evolvedExecutionHarness) {
             this.evolutionContext = evolutionContext;
             this.currentExecutionHarness = currentExecutionHarness;
             this.evolvedExecutionHarness = evolvedExecutionHarness;
             this.harnessExecutor = new HarnessExecutor<T>();
+            this.resultComparator = new ResultComparator<T>();
         }
 
         public T evolve() throws Exception {
@@ -94,8 +100,10 @@ public class Evolution {
         }
 
         private void consumeResults(ImplementationPreferenceType implementationPreferenceType, ExecutionResult<T> currentExecutionResult, ExecutionResult<T> evolvedExecutionResult) {
-            evolutionContext.evolutionResultConsumer.consumeResults(evolutionContext.name, implementationPreferenceType, currentExecutionResult, evolvedExecutionResult);
+            ComparisonResult<T> comparisonResult = resultComparator.compareResults(evolutionContext.name, currentExecutionResult.getArguments(), implementationPreferenceType, currentExecutionResult, evolvedExecutionResult);
+            evolutionContext.evolutionResultConsumer.consumeResults(comparisonResult);
         }
+
     }
 
     public static class EvolutionContext<T> {
