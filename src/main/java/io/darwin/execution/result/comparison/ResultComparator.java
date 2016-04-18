@@ -23,20 +23,25 @@
  */
 package io.darwin.execution.result.comparison;
 
-import io.darwin.execution.ImplementationPreferenceType;
-import io.darwin.execution.result.ExecutionResult;
+import io.darwin.execution.ImplementationPreference;
+import io.darwin.execution.result.ExceptionExecutionResult;
 import io.darwin.execution.result.ResultType;
+import io.darwin.execution.result.ValueExecutionResult;
+import io.darwin.execution.result.evolutionary.EvolvedExceptionExecutionResult;
+import io.darwin.execution.result.evolutionary.EvolvedExecutionResult;
+import io.darwin.execution.result.protoplast.ProtoplastExceptionExecutionResult;
+import io.darwin.execution.result.protoplast.ProtoplastExecutionResult;
 
 import java.util.Objects;
 
 public class ResultComparator<T> {
 
-    public ComparisonResult<T> compareResults(String evolutionName, Object[] arguments, ImplementationPreferenceType implementationPreferenceType, ExecutionResult<T> currentExecutionResult, ExecutionResult<T> evolvedExecutionResult) {
+    public ComparisonResult<T> compareResults(String evolutionName, Object[] arguments, ImplementationPreference implementationPreference, ProtoplastExecutionResult<T> protoplastExecutionResult, EvolvedExecutionResult<T> evolvedExecutionResult) {
         ResultType resultType = ResultType.INVALID_STATE;
 
-        if (currentExecutionResult.getException() == null) {
-            if (evolvedExecutionResult.getException() == null) {
-                if (Objects.equals(currentExecutionResult.getResult(), evolvedExecutionResult.getResult())) {
+        if (protoplastExecutionResult instanceof ValueExecutionResult) {
+            if (evolvedExecutionResult instanceof ValueExecutionResult) {
+                if (Objects.equals(((ValueExecutionResult) protoplastExecutionResult).getValue(), ((ValueExecutionResult) evolvedExecutionResult).getValue())) {
                     resultType = ResultType.OK;
                 } else {
                     resultType = ResultType.ERROR_DIFFERENT_RESULTS;
@@ -44,20 +49,20 @@ public class ResultComparator<T> {
             } else {
                 resultType = ResultType.ERROR_EXCEPTION_VS_RESULT;
             }
-        } else {
-            if (evolvedExecutionResult.getException() == null) {
+        } else if(protoplastExecutionResult instanceof ExceptionExecutionResult) {
+            if (evolvedExecutionResult instanceof ValueExecutionResult) {
                 resultType = ResultType.ERROR_EXCEPTION_VS_RESULT;
-            } else if (areExceptionsEqual(currentExecutionResult, evolvedExecutionResult)) {
+            } else if (areExceptionsEqual((ProtoplastExceptionExecutionResult<T>) protoplastExecutionResult, (EvolvedExceptionExecutionResult<T>) evolvedExecutionResult)) {
                 resultType = ResultType.OK_EXCEPTIONS;
             }  else {
                 resultType = ResultType.ERROR_DIFFERENT_EXCEPTIONS;
             }
         }
 
-        return new ComparisonResult<T>(evolutionName, implementationPreferenceType, arguments,  currentExecutionResult, evolvedExecutionResult, resultType);
+        return new ComparisonResult<T>(evolutionName, implementationPreference, arguments,  protoplastExecutionResult, evolvedExecutionResult, resultType);
     }
 
-    private boolean areExceptionsEqual(ExecutionResult<T> currentExecutionResult, ExecutionResult<T> evolvedExecutionResult) {
+    private boolean areExceptionsEqual(ProtoplastExceptionExecutionResult<T> currentExecutionResult, EvolvedExceptionExecutionResult<T> evolvedExecutionResult) {
         return Objects.equals(currentExecutionResult.getException().getClass(), evolvedExecutionResult.getException().getClass());
     }
 }

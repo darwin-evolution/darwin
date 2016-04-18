@@ -27,17 +27,19 @@ import io.darwin.api.EvolutionResultConsumer;
 import io.darwin.api.ImplementationChooser;
 import io.darwin.async.AsyncEvolutionBuilder;
 import io.darwin.execution.HarnessExecutor;
-import io.darwin.execution.ImplementationPreferenceType;
-import io.darwin.execution.harness.CurrentExecutionHarness;
+import io.darwin.execution.ImplementationPreference;
+import io.darwin.execution.harness.ProtoplastExecutionHarness;
 import io.darwin.execution.harness.EvolvedExecutionHarness;
+import io.darwin.execution.result.ExceptionExecutionResult;
 import io.darwin.execution.result.ExecutionResult;
-import io.darwin.execution.result.ResultType;
+import io.darwin.execution.result.ValueExecutionResult;
 import io.darwin.execution.result.comparison.ComparisonResult;
 import io.darwin.execution.result.comparison.ResultComparator;
+import io.darwin.execution.result.protoplast.ProtoplastExecutionResult;
+import io.darwin.execution.result.evolutionary.EvolvedExecutionResult;
 import io.darwin.slf4j.Slf4jEvolutionResultConsumer;
 import io.darwin.typesafeconfig.TypesafeConfigImplementationChooser;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Evolution {
@@ -53,54 +55,54 @@ public class Evolution {
     public static class FromEvolutionBuilder<T> {
 
         private EvolutionContext<T> evolutionContext;
-        private CurrentExecutionHarness<T> currentExecutionHarness;
+        private ProtoplastExecutionHarness<T> protoplastExecutionHarness;
 
-        public FromEvolutionBuilder(EvolutionContext<T> evolutionContext, CurrentExecutionHarness<T> currentExecutionHarness) {
+        public FromEvolutionBuilder(EvolutionContext<T> evolutionContext, ProtoplastExecutionHarness<T> protoplastExecutionHarness) {
             this.evolutionContext = evolutionContext;
-            this.currentExecutionHarness = currentExecutionHarness;
+            this.protoplastExecutionHarness = protoplastExecutionHarness;
         }
 
         public EvolutionBuilder<T> to(EvolvedExecutionHarness<T> evolvedExecutionHarness) {
-            return new EvolutionBuilder<T>(evolutionContext, currentExecutionHarness, evolvedExecutionHarness);
+            return new EvolutionBuilder<T>(evolutionContext, protoplastExecutionHarness, evolvedExecutionHarness);
         }
     }
 
     public static class EvolutionBuilder<T> {
 
         private EvolutionContext<T> evolutionContext;
-        private CurrentExecutionHarness<T> currentExecutionHarness;
+        private ProtoplastExecutionHarness<T> protoplastExecutionHarness;
         private EvolvedExecutionHarness<T> evolvedExecutionHarness;
         private HarnessExecutor<T> harnessExecutor;
         private ResultComparator<T> resultComparator;
 
-        public EvolutionBuilder(EvolutionContext<T> evolutionContext, CurrentExecutionHarness<T> currentExecutionHarness, EvolvedExecutionHarness<T> evolvedExecutionHarness) {
+        public EvolutionBuilder(EvolutionContext<T> evolutionContext, ProtoplastExecutionHarness<T> protoplastExecutionHarness, EvolvedExecutionHarness<T> evolvedExecutionHarness) {
             this.evolutionContext = evolutionContext;
-            this.currentExecutionHarness = currentExecutionHarness;
+            this.protoplastExecutionHarness = protoplastExecutionHarness;
             this.evolvedExecutionHarness = evolvedExecutionHarness;
             this.harnessExecutor = new HarnessExecutor<T>();
             this.resultComparator = new ResultComparator<T>();
         }
 
         public T evolve() throws Exception {
-            ImplementationPreferenceType implementationPreferenceType = evolutionContext.implementationChooser.chooseImplementation(evolutionContext.name);
+            ImplementationPreference implementationPreference = evolutionContext.implementationChooser.chooseImplementation(evolutionContext.name);
 
-            ExecutionResult<T> currentExecutionResult = harnessExecutor.executeHarness(currentExecutionHarness);
+            ProtoplastExecutionResult<T> protoplastExecutionResult = harnessExecutor.executeProtoplastHarness(protoplastExecutionHarness);
 
-            ExecutionResult<T> evolvedExecutionResult = harnessExecutor.executeHarness(evolvedExecutionHarness);
+            EvolvedExecutionResult<T> evolvedExecutionResult = harnessExecutor.executeEvolvedHarness(evolvedExecutionHarness);
 
-            consumeResults(implementationPreferenceType, currentExecutionResult, evolvedExecutionResult);
+            consumeResults(implementationPreference, protoplastExecutionResult, evolvedExecutionResult);
 
-            ExecutionResult<T> preferredImplementationResult = implementationPreferenceType.equals(ImplementationPreferenceType.EVOLVED) ? evolvedExecutionResult : currentExecutionResult;
+            ExecutionResult<T> preferredImplementationResult = implementationPreference.equals(ImplementationPreference.EVOLVED) ? evolvedExecutionResult : protoplastExecutionResult;
 
-            if (preferredImplementationResult.getException() == null) {
-                return preferredImplementationResult.getResult();
+            if (preferredImplementationResult instanceof ValueExecutionResult) {
+                return ((ValueExecutionResult<T>) preferredImplementationResult).getValue();
             } else {
-                throw preferredImplementationResult.getException();
+                throw ((ExceptionExecutionResult<T>)preferredImplementationResult).getException();
             }
         }
 
-        private void consumeResults(ImplementationPreferenceType implementationPreferenceType, ExecutionResult<T> currentExecutionResult, ExecutionResult<T> evolvedExecutionResult) {
-            ComparisonResult<T> comparisonResult = resultComparator.compareResults(evolutionContext.name, currentExecutionResult.getArguments(), implementationPreferenceType, currentExecutionResult, evolvedExecutionResult);
+        private void consumeResults(ImplementationPreference implementationPreference, ProtoplastExecutionResult<T> protoplastExecutionResult, EvolvedExecutionResult<T> evolvedExecutionResult) {
+            ComparisonResult<T> comparisonResult = resultComparator.compareResults(evolutionContext.name, protoplastExecutionResult.getArguments(), implementationPreference, protoplastExecutionResult, evolvedExecutionResult);
             evolutionContext.evolutionResultConsumer.consumeResults(comparisonResult);
         }
 
@@ -127,8 +129,8 @@ public class Evolution {
             return this;
         }
 
-        public FromEvolutionBuilder<T> from(CurrentExecutionHarness<T> currentExecutionHarness) {
-            return new FromEvolutionBuilder<T>(this, currentExecutionHarness);
+        public FromEvolutionBuilder<T> from(ProtoplastExecutionHarness<T> protoplastExecutionHarness) {
+            return new FromEvolutionBuilder<T>(this, protoplastExecutionHarness);
         }
     }
 }

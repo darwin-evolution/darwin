@@ -25,9 +25,14 @@ package io.darwin.typesafeconfig;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import io.darwin.execution.ImplementationPreferenceType;
 import io.darwin.api.ImplementationChooser;
+import io.darwin.execution.ImplementationPreference;
 
+/**
+ * This class represents default {@link ImplementationChooser} provider.
+ *
+ * It uses TypesafeConfig to load implementation preference configuration.
+ */
 public class TypesafeConfigImplementationChooser extends ImplementationChooser {
 
     public static final String CONFIG_PATH_PREFIX = "darwin.evolution";
@@ -36,7 +41,7 @@ public class TypesafeConfigImplementationChooser extends ImplementationChooser {
     private Config config;
 
     public TypesafeConfigImplementationChooser() {
-        this.config = ConfigFactory.load();
+        this.config = ConfigFactory.load().resolve();
     }
 
     protected TypesafeConfigImplementationChooser(Config config) {
@@ -44,12 +49,12 @@ public class TypesafeConfigImplementationChooser extends ImplementationChooser {
     }
 
     @Override
-    public ImplementationPreferenceType chooseImplementation(String evolutionName) {
+    public ImplementationPreference chooseImplementation(String evolutionName) {
         String evolvedImplementationEnabled = CONFIG_PATH_PREFIX + "." + evolutionName + "." + CONFIG_PATH_SUFFIX;
         if (config.hasPath(evolvedImplementationEnabled) && config.getBoolean(evolvedImplementationEnabled)) {
-            return ImplementationPreferenceType.EVOLVED;
+            return ImplementationPreference.EVOLVED;
         } else {
-            return ImplementationPreferenceType.CURRENT;
+            return ImplementationPreference.PROTOPLAST;
         }
     }
 }

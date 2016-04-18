@@ -24,7 +24,12 @@
 package io.darwin.slf4j;
 
 import io.darwin.api.EvolutionResultConsumer;
+import io.darwin.execution.result.ExceptionExecutionResult;
+import io.darwin.execution.result.ExecutionResult;
+import io.darwin.execution.result.ValueExecutionResult;
 import io.darwin.execution.result.comparison.ComparisonResult;
+import io.darwin.execution.result.evolutionary.EvolvedExecutionResult;
+import io.darwin.execution.result.protoplast.ProtoplastExecutionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,17 +43,64 @@ public class Slf4jEvolutionResultConsumer<T> extends EvolutionResultConsumer<T> 
     public void consumeResults(ComparisonResult<T> comparisonResult) {
         StringBuffer sb = new StringBuffer();
 
-        sb.append(comparisonResult.getName()).append("|");
-        sb.append(Arrays.toString(comparisonResult.getArguments()).replaceAll("\\|", "\\\\|")).append("|");
-        sb.append(comparisonResult.getImplementationPreferenceType().name()).append("|");
-        sb.append(comparisonResult.getCurrentImplementationResult()).append("|");
-        sb.append(comparisonResult.getCurrentImplementationExecutionTime()).append("|");
-        sb.append(comparisonResult.getCurrentImplementationException()).append("|");
-        sb.append(comparisonResult.getEvolvedImplementationResult()).append("|");
-        sb.append(comparisonResult.getEvolvedImplementationExecutionTime()).append("|");
-        sb.append(comparisonResult.getEvolvedImplementationException()).append("|");
-        sb.append(comparisonResult.getResultType().name());
+        sb = consumeResults(comparisonResult, sb);
 
         log.info(sb.toString());
+    }
+
+    protected StringBuffer consumeResults(ComparisonResult<T> comparisonResult, StringBuffer stringBuffer) {
+
+        stringBuffer = appendEvolutionName(comparisonResult, stringBuffer);
+
+        stringBuffer = appendExecutionArguments(comparisonResult, stringBuffer);
+
+        stringBuffer = appendImplementationPreference(comparisonResult, stringBuffer);
+
+        stringBuffer = appendProtoplastExecutionResult(comparisonResult.getProtoplastExecutionResult(), stringBuffer);
+
+        stringBuffer = appendEvolvedExecutionResult(comparisonResult.getEvolvedExecutionResult(), stringBuffer);
+
+        stringBuffer = appendResultType(comparisonResult, stringBuffer);
+
+        return stringBuffer;
+    }
+
+    private StringBuffer appendEvolvedExecutionResult(EvolvedExecutionResult<T> evolvedExecutionResult, StringBuffer sb) {
+        appendExecutionResult(evolvedExecutionResult, sb);
+        return sb;
+    }
+
+    private StringBuffer appendProtoplastExecutionResult(ProtoplastExecutionResult<T> protoplastExecutionResult, StringBuffer sb) {
+        appendExecutionResult(protoplastExecutionResult, sb);
+        return sb;
+    }
+
+    private StringBuffer appendExecutionResult(ExecutionResult<T> executionResult, StringBuffer sb) {
+        sb.append(executionResult.getDurationNs()).append("|");
+        if (executionResult instanceof ExceptionExecutionResult) {
+            sb.append("").append("|");
+            sb.append(((ExceptionExecutionResult)executionResult).getException()).append("|");
+
+        } else if (executionResult instanceof ValueExecutionResult) {
+            sb.append(((ValueExecutionResult)executionResult).getValue()).append("|");
+            sb.append("").append("|");
+        }
+        return sb;
+    }
+
+    private StringBuffer appendResultType(ComparisonResult<T> comparisonResult, StringBuffer sb) {
+        return sb.append(comparisonResult.getResultType().name());
+    }
+
+    private StringBuffer appendImplementationPreference(ComparisonResult<T> comparisonResult, StringBuffer sb) {
+        return sb.append(comparisonResult.getImplementationPreference().name()).append("|");
+    }
+
+    private StringBuffer appendExecutionArguments(ComparisonResult<T> comparisonResult, StringBuffer sb) {
+        return sb.append(Arrays.toString(comparisonResult.getArguments()).replaceAll("\\|", "\\\\|")).append("|");
+    }
+
+    private StringBuffer appendEvolutionName(ComparisonResult<T> comparisonResult, StringBuffer sb) {
+        return sb.append(comparisonResult.getName()).append("|");
     }
 }

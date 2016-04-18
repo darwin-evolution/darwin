@@ -23,32 +23,31 @@
  */
 package io.darwin.typesafeconfig;
 
-import io.darwin.execution.ImplementationPreferenceType;
+import io.darwin.execution.ImplementationPreference;
 import org.testng.annotations.Test;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TypesafeConfigImplementationChooserTest {
 
     @Test
     public void shouldReturnEvolvedImplementationForEvolvedEnabledConfigSetting() {
-        ImplementationPreferenceType implementationPreferenceType = new TypesafeConfigImplementationChooser().chooseImplementation("EvolvedEnabled");
+        ImplementationPreference implementationPreference = new TypesafeConfigImplementationChooser().chooseImplementation("EvolvedEnabled");
 
-        assertThat(implementationPreferenceType).isEqualTo(ImplementationPreferenceType.EVOLVED);
+        assertThat(implementationPreference).isEqualTo(ImplementationPreference.EVOLVED);
     }
 
     @Test
     public void shouldReturnCurrentImplementationForEvolvedDisabledConfigSetting() {
-        ImplementationPreferenceType implementationPreferenceType = new TypesafeConfigImplementationChooser().chooseImplementation("EvolvedDisabled");
+        ImplementationPreference implementationPreference = new TypesafeConfigImplementationChooser().chooseImplementation("EvolvedDisabled");
 
-        assertThat(implementationPreferenceType).isEqualTo(ImplementationPreferenceType.CURRENT);
+        assertThat(implementationPreference).isEqualTo(ImplementationPreference.PROTOPLAST);
     }
 
     @Test
     public void shouldReturnCurrentImplementationForMissingConfigSetting() {
-        ImplementationPreferenceType implementationPreferenceType = new TypesafeConfigImplementationChooser().chooseImplementation("EvolvedMissing");
+        ImplementationPreference implementationPreference = new TypesafeConfigImplementationChooser().chooseImplementation("EvolvedMissing");
 
-        assertThat(implementationPreferenceType).isEqualTo(ImplementationPreferenceType.CURRENT);
+        assertThat(implementationPreference).isEqualTo(ImplementationPreference.PROTOPLAST);
     }
-
 }

@@ -23,24 +23,57 @@
  */
 package io.darwin.execution;
 
+import io.darwin.execution.harness.EvolvedExecutionHarness;
 import io.darwin.execution.harness.ExecutionHarness;
+import io.darwin.execution.harness.ProtoplastExecutionHarness;
 import io.darwin.execution.result.ExecutionResult;
+import io.darwin.execution.result.evolutionary.EvolvedExceptionExecutionResult;
+import io.darwin.execution.result.evolutionary.EvolvedExecutionResult;
+import io.darwin.execution.result.evolutionary.EvolvedValueExecutionResult;
+import io.darwin.execution.result.protoplast.ProtoplastExceptionExecutionResult;
+import io.darwin.execution.result.protoplast.ProtoplastExecutionResult;
+import io.darwin.execution.result.protoplast.ProtoplastValueExecutionResult;
 
+/**
+ * Sandbox that allows {@link io.darwin.evolution.protoplast.Protoplast} and {@link io.darwin.evolution.evolved.Evolved}
+ * executions harnesses to be executed and their results collected and compared.
+ *
+ * @param <T> result type
+ */
 public class HarnessExecutor<T> {
 
-    public ExecutionResult<T> executeHarness(ExecutionHarness<T> executionHarness) {
-        T result = null;
-        Exception exception = null;
-        long executionDuration = -1L;
-
-        try {
-            long executionStartMillis = System.currentTimeMillis();
-            result = executionHarness.execute();
-            executionDuration = System.currentTimeMillis() - executionStartMillis;
-        } catch (Exception e) {
-            exception = e;
-        }
-
-        return new ExecutionResult<T>(executionHarness.getArguments(), result, executionDuration, exception);
+    public ProtoplastExecutionResult<T> executeProtoplastHarness(ProtoplastExecutionHarness<T> protoplastExecutionHarness) {
+       return (ProtoplastExecutionResult<T>) executeHarness(protoplastExecutionHarness);
     }
+
+    public EvolvedExecutionResult<T> executeEvolvedHarness(EvolvedExecutionHarness<T> evolvedExecutionHarness) {
+       return (EvolvedExecutionResult<T>) executeHarness(evolvedExecutionHarness);
+    }
+
+    private ExecutionResult<T> executeHarness(ExecutionHarness<T> executionHarness) {
+        long executionStartMillis = System.currentTimeMillis();
+        try {
+            T result = executionHarness.execute();
+            return createValueExecutionResult(executionHarness, executionStartMillis, result);
+        } catch (Exception e) {
+            return createExceptionExecutionResult(executionHarness, executionStartMillis, e);
+        }
+    }
+
+    private ExecutionResult<T> createExceptionExecutionResult(ExecutionHarness<T> executionHarness, long executionStartMillis, Exception e) {
+        if (executionHarness instanceof ProtoplastExecutionHarness) {
+            return new ProtoplastExceptionExecutionResult<T>(executionHarness.getArguments(), (System.currentTimeMillis() - executionStartMillis), e);
+        } else {
+            return new EvolvedExceptionExecutionResult<T>(executionHarness.getArguments(), (System.currentTimeMillis() - executionStartMillis), e);
+        }
+    }
+
+    private ExecutionResult<T> createValueExecutionResult(ExecutionHarness<T> executionHarness, long executionStartMillis, T result) {
+        if (executionHarness instanceof ProtoplastExecutionHarness) {
+            return new ProtoplastValueExecutionResult<T>(executionHarness.getArguments(), (System.currentTimeMillis() - executionStartMillis), result);
+        } else {
+            return new EvolvedValueExecutionResult<T>(executionHarness.getArguments(), (System.currentTimeMillis() - executionStartMillis), result);
+        }
+    }
+
 }

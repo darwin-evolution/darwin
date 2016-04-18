@@ -21,8 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.darwin.execution.harness;
+package io.darwin.execution;
 
-public abstract class CurrentExecutionHarness<T> extends ExecutionHarness<T> {
+public enum ImplementationPreference {
+
+    /**
+     * This represents old, original implementation.
+     */
+    PROTOPLAST,
+
+    /**
+     * This represents new, evolved implementation.
+     */
+    EVOLVED;
 
 }

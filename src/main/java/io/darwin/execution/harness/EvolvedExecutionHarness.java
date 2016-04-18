@@ -23,6 +23,8 @@
  */
 package io.darwin.execution.harness;
 
-public abstract class EvolvedExecutionHarness<T> extends ExecutionHarness<T> {
+import io.darwin.evolution.evolved.Evolved;
+
+public abstract class EvolvedExecutionHarness<T> extends ExecutionHarness<T> implements Evolved<T> {
 
 }

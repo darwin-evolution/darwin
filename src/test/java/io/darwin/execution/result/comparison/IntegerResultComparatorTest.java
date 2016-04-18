@@ -23,12 +23,11 @@
  */
 package io.darwin.execution.result.comparison;
 
-import io.darwin.execution.ImplementationPreferenceType;
+import io.darwin.execution.ImplementationPreference;
 import io.darwin.execution.result.ExecutionResult;
 import io.darwin.execution.result.ResultType;
 import org.testng.annotations.Test;
 
-import static com.google.common.truth.Truth.assertThat;
 
 public class IntegerResultComparatorTest {
 
@@ -37,193 +36,194 @@ public class IntegerResultComparatorTest {
     @Test
     public void shouldCompareOkResults() {
 
-        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareOkResults",
-                arguments,
-                ImplementationPreferenceType.CURRENT,
-                firstExecutionResultWithoutException(),
-                firstExecutionResultWithoutException());
+//        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareOkResults",
+//                arguments,
+//                ImplementationPreference.PROTOPLAST,
+//                firstExecutionResultWithoutException(),
+//                firstExecutionResultWithoutException());
+//
+//        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
+//
+//        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNull();
+//        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isEqualTo(1);
+//
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNull();
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isEqualTo(1);
+//
+//        assertThat(shouldCompareOkResults.getImplementationPreference()).isEqualTo(ImplementationPreference.PROTOPLAST);
+//        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.OK);
+//    }
+//
+//    @Test
+//    public void shouldCompareOkResultsForTwoNulls() {
+//
+//        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareOkResultsForTwoNulls",
+//                arguments,
+//                ImplementationPreference.PROTOPLAST,
+//                nullExecutionResultWithoutException(),
+//                nullExecutionResultWithoutException());
+//
+//        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
+//
+//        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNull();
+//        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isNull();
+//
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNull();
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isNull();
+//
+//        assertThat(shouldCompareOkResults.getImplementationPreference()).isEqualTo(ImplementationPreference.PROTOPLAST);
+//        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.OK);
+//    }
+//
+//    @Test
+//    public void shouldCompareOkExceptionsResult() {
+//
+//        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareOkExceptionsResult",
+//                arguments,
+//                ImplementationPreference.PROTOPLAST,
+//                executionResultWithException(),
+//                executionResultWithException());
+//
+//        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
+//
+//        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNotNull();
+//        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isNull();
+//
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNotNull();
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isNull();
+//
+//        assertThat(shouldCompareOkResults.getImplementationPreference()).isEqualTo(ImplementationPreference.PROTOPLAST);
+//        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.OK_EXCEPTIONS);
+//    }
+//
+//    @Test
+//    public void shouldCompareOkExceptionsResultForDifferentStackTraces() {
+//
+//        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareOkExceptionsResultForDifferentStackTraces",
+//                arguments,
+//                ImplementationPreference.PROTOPLAST,
+//                executionResultWithException(),
+//                secondExecutionResultWithException());
+//
+//        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
+//
+//        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNotNull();
+//        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isNull();
+//
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNotNull();
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isNull();
+//
+//        assertThat(shouldCompareOkResults.getImplementationPreference()).isEqualTo(ImplementationPreference.PROTOPLAST);
+//        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.OK_EXCEPTIONS);
+//    }
+//
+//    @Test
+//    public void shouldCompareErrorDifferentResults() {
+//
+//        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareErrorDifferentResults",
+//                arguments,
+//                ImplementationPreference.PROTOPLAST,
+//                firstExecutionResultWithoutException(),
+//                secondExecutionResultWithoutException());
+//
+//        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
+//
+//        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNull();
+//        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isEqualTo(1);
+//
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNull();
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isEqualTo(2);
+//
+//        assertThat(shouldCompareOkResults.getImplementationPreference()).isEqualTo(ImplementationPreference.PROTOPLAST);
+//        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.ERROR_DIFFERENT_RESULTS);
+//    }
+//
+//    @Test
+//    public void shouldCompareErrorDifferentResultsForNullAndNotNull() {
+//
+//        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareErrorDifferentResultsForNullAndNotNull",
+//                arguments,
+//                ImplementationPreference.PROTOPLAST,
+//                firstExecutionResultWithoutException(),
+//                nullExecutionResultWithoutException());
+//
+//        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
+//
+//        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNull();
+//        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isEqualTo(1);
+//
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNull();
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isNull();
+//
+//        assertThat(shouldCompareOkResults.getImplementationPreference()).isEqualTo(ImplementationPreference.PROTOPLAST);
+//        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.ERROR_DIFFERENT_RESULTS);
+//    }
+//
+//    @Test
+//    public void shouldCompareErrorExceptionVsResult() {
+//
+//        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareErrorExceptionVsResult",
+//                arguments,
+//                ImplementationPreference.PROTOPLAST,
+//                firstExecutionResultWithoutException(),
+//                executionResultWithException());
+//
+//        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
+//
+//        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNull();
+//        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isEqualTo(1);
+//
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNotNull();
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isNull();
+//
+//        assertThat(shouldCompareOkResults.getImplementationPreference()).isEqualTo(ImplementationPreference.PROTOPLAST);
+//        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.ERROR_EXCEPTION_VS_RESULT);
+//    }
+//
+//    @Test
+//    public void shouldCompareErrorExceptionVsResultForOtherWayAround() {
+//
+//        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareErrorExceptionVsResultForOtherWayAround",
+//                arguments,
+//                ImplementationPreference.PROTOPLAST,
+//                executionResultWithException(),
+//                firstExecutionResultWithoutException());
+//
+//        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
+//
+//        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNotNull();
+//        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isNull();
+//
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNull();
+//        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isEqualTo(1);
+//
+//        assertThat(shouldCompareOkResults.getImplementationPreference()).isEqualTo(ImplementationPreference.PROTOPLAST);
+//        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.ERROR_EXCEPTION_VS_RESULT);
+//    }
+//
+//
+//
+//    private ExecutionResult<Integer> firstExecutionResultWithoutException() {
+//        return new ExecutionResult<Integer>(arguments, 1, 0, null);
+//    }
+//
+//    private ExecutionResult<Integer> secondExecutionResultWithoutException() {
+//
+//        return new ExecutionResult<Integer>(arguments, 2, 0, null);
+//    }
+//
+//    private ExecutionResult<Integer> nullExecutionResultWithoutException() {
+//
+//        return new ExecutionResult<Integer>(arguments, null, 0, null);
+//    }
+//
+//    private ExecutionResult<Integer> executionResultWithException() {
+//        return new ExecutionResult<Integer>(arguments, null, 0, new IllegalAccessException());
+//    }
+//
+//    private ExecutionResult<Integer> secondExecutionResultWithException() {
+//        return new ExecutionResult<Integer>(arguments, null, 0, new IllegalAccessException());
+//    }
 
-        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
-
-        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNull();
-        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isEqualTo(1);
-
-        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNull();
-        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isEqualTo(1);
-
-        assertThat(shouldCompareOkResults.getImplementationPreferenceType()).isEqualTo(ImplementationPreferenceType.CURRENT);
-        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.OK);
     }
-
-    @Test
-    public void shouldCompareOkResultsForTwoNulls() {
-
-        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareOkResultsForTwoNulls",
-                arguments,
-                ImplementationPreferenceType.CURRENT,
-                nullExecutionResultWithoutException(),
-                nullExecutionResultWithoutException());
-
-        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
-
-        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNull();
-        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isNull();
-
-        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNull();
-        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isNull();
-
-        assertThat(shouldCompareOkResults.getImplementationPreferenceType()).isEqualTo(ImplementationPreferenceType.CURRENT);
-        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.OK);
-    }
-
-    @Test
-    public void shouldCompareOkExceptionsResult() {
-
-        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareOkExceptionsResult",
-                arguments,
-                ImplementationPreferenceType.CURRENT,
-                executionResultWithException(),
-                executionResultWithException());
-
-        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
-
-        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNotNull();
-        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isNull();
-
-        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNotNull();
-        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isNull();
-
-        assertThat(shouldCompareOkResults.getImplementationPreferenceType()).isEqualTo(ImplementationPreferenceType.CURRENT);
-        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.OK_EXCEPTIONS);
-    }
-
-    @Test
-    public void shouldCompareOkExceptionsResultForDifferentStackTraces() {
-
-        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareOkExceptionsResultForDifferentStackTraces",
-                arguments,
-                ImplementationPreferenceType.CURRENT,
-                executionResultWithException(),
-                secondExecutionResultWithException());
-
-        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
-
-        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNotNull();
-        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isNull();
-
-        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNotNull();
-        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isNull();
-
-        assertThat(shouldCompareOkResults.getImplementationPreferenceType()).isEqualTo(ImplementationPreferenceType.CURRENT);
-        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.OK_EXCEPTIONS);
-    }
-
-    @Test
-    public void shouldCompareErrorDifferentResults() {
-
-        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareErrorDifferentResults",
-                arguments,
-                ImplementationPreferenceType.CURRENT,
-                firstExecutionResultWithoutException(),
-                secondExecutionResultWithoutException());
-
-        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
-
-        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNull();
-        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isEqualTo(1);
-
-        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNull();
-        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isEqualTo(2);
-
-        assertThat(shouldCompareOkResults.getImplementationPreferenceType()).isEqualTo(ImplementationPreferenceType.CURRENT);
-        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.ERROR_DIFFERENT_RESULTS);
-    }
-
-    @Test
-    public void shouldCompareErrorDifferentResultsForNullAndNotNull() {
-
-        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareErrorDifferentResultsForNullAndNotNull",
-                arguments,
-                ImplementationPreferenceType.CURRENT,
-                firstExecutionResultWithoutException(),
-                nullExecutionResultWithoutException());
-
-        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
-
-        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNull();
-        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isEqualTo(1);
-
-        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNull();
-        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isNull();
-
-        assertThat(shouldCompareOkResults.getImplementationPreferenceType()).isEqualTo(ImplementationPreferenceType.CURRENT);
-        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.ERROR_DIFFERENT_RESULTS);
-    }
-
-    @Test
-    public void shouldCompareErrorExceptionVsResult() {
-
-        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareErrorExceptionVsResult",
-                arguments,
-                ImplementationPreferenceType.CURRENT,
-                firstExecutionResultWithoutException(),
-                executionResultWithException());
-
-        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
-
-        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNull();
-        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isEqualTo(1);
-
-        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNotNull();
-        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isNull();
-
-        assertThat(shouldCompareOkResults.getImplementationPreferenceType()).isEqualTo(ImplementationPreferenceType.CURRENT);
-        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.ERROR_EXCEPTION_VS_RESULT);
-    }
-
-    @Test
-    public void shouldCompareErrorExceptionVsResultForOtherWayAround() {
-
-        ComparisonResult<Integer> shouldCompareOkResults = new ResultComparator<Integer>().compareResults("shouldCompareErrorExceptionVsResultForOtherWayAround",
-                arguments,
-                ImplementationPreferenceType.CURRENT,
-                executionResultWithException(),
-                firstExecutionResultWithoutException());
-
-        assertThat(shouldCompareOkResults.getArguments()).isEqualTo(arguments);
-
-        assertThat(shouldCompareOkResults.getCurrentImplementationException()).isNotNull();
-        assertThat(shouldCompareOkResults.getCurrentImplementationResult()).isNull();
-
-        assertThat(shouldCompareOkResults.getEvolvedImplementationException()).isNull();
-        assertThat(shouldCompareOkResults.getEvolvedImplementationResult()).isEqualTo(1);
-
-        assertThat(shouldCompareOkResults.getImplementationPreferenceType()).isEqualTo(ImplementationPreferenceType.CURRENT);
-        assertThat(shouldCompareOkResults.getResultType()).isEqualTo(ResultType.ERROR_EXCEPTION_VS_RESULT);
-    }
-
-
-
-    private ExecutionResult<Integer> firstExecutionResultWithoutException() {
-        return new ExecutionResult<Integer>(arguments, 1, 0, null);
-    }
-
-    private ExecutionResult<Integer> secondExecutionResultWithoutException() {
-
-        return new ExecutionResult<Integer>(arguments, 2, 0, null);
-    }
-
-    private ExecutionResult<Integer> nullExecutionResultWithoutException() {
-
-        return new ExecutionResult<Integer>(arguments, null, 0, null);
-    }
-
-    private ExecutionResult<Integer> executionResultWithException() {
-        return new ExecutionResult<Integer>(arguments, null, 0, new IllegalAccessException());
-    }
-
-    private ExecutionResult<Integer> secondExecutionResultWithException() {
-        return new ExecutionResult<Integer>(arguments, null, 0, new IllegalAccessException());
-    }
-
 }

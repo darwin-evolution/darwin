@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.darwin.execution;
+package io.darwin.execution.harness;
 
-public enum ImplementationPreferenceType {
+import io.darwin.evolution.protoplast.Protoplast;
 
-    CURRENT, EVOLVED;
+public abstract class ProtoplastExecutionHarness<T> extends ExecutionHarness<T> implements Protoplast<T> {
 
 }

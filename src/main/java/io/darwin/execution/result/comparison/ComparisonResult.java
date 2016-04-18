@@ -23,42 +23,30 @@
  */
 package io.darwin.execution.result.comparison;
 
-import io.darwin.execution.ImplementationPreferenceType;
-import io.darwin.execution.result.ExecutionResult;
+import io.darwin.execution.ImplementationPreference;
 import io.darwin.execution.result.ResultType;
+import io.darwin.execution.result.evolutionary.EvolvedExecutionResult;
+import io.darwin.execution.result.protoplast.ProtoplastExecutionResult;
 
 import java.io.Serializable;
 
 public class ComparisonResult<T> implements Serializable {
 
     private String name;
-    private ImplementationPreferenceType implementationPreferenceType;
+    private ImplementationPreference implementationPreference;
     private Object[] arguments;
 
-    private T currentImplementationResult;
-    private long currentImplementationExecutionTime;
-    private Exception currentImplementationException;
-
-    private T evolvedImplementationResult;
-    private long evolvedImplementationExecutionTime;
-    private Exception evolvedImplementationException;
+    private ProtoplastExecutionResult<T> protoplastExecutionResult;
+    private EvolvedExecutionResult<T> evolvedExecutionResult;
 
     private ResultType resultType;
 
-    public ComparisonResult(String name, ImplementationPreferenceType implementationPreferenceType, Object[] arguments, ExecutionResult<T> currentExecutionResult, ExecutionResult<T> evolvedExecutionResult, ResultType resultType) {
-        this(name, implementationPreferenceType, arguments,currentExecutionResult.getResult(), currentExecutionResult.getExecutionTime(), currentExecutionResult.getException(), evolvedExecutionResult.getResult(), evolvedExecutionResult.getExecutionTime(), evolvedExecutionResult.getException(), resultType);
-    }
-
-    public ComparisonResult(String name, ImplementationPreferenceType implementationPreferenceType, Object[] arguments, T currentImplementationResult, long currentImplementationExecutionTime, Exception currentImplementationException, T evolvedImplementationResult, long evolvedImplementationExecutionTime, Exception evolvedImplementationException, ResultType resultType) {
+    public ComparisonResult(String name, ImplementationPreference implementationPreference, Object[] arguments, ProtoplastExecutionResult<T> protoplastExecutionResult, EvolvedExecutionResult<T> evolvedExecutionResult, ResultType resultType) {
         this.name = name;
-        this.implementationPreferenceType = implementationPreferenceType;
+        this.implementationPreference = implementationPreference;
         this.arguments = arguments;
-        this.currentImplementationResult = currentImplementationResult;
-        this.currentImplementationExecutionTime = currentImplementationExecutionTime;
-        this.currentImplementationException = currentImplementationException;
-        this.evolvedImplementationResult = evolvedImplementationResult;
-        this.evolvedImplementationExecutionTime = evolvedImplementationExecutionTime;
-        this.evolvedImplementationException = evolvedImplementationException;
+        this.protoplastExecutionResult = protoplastExecutionResult;
+        this.evolvedExecutionResult = evolvedExecutionResult;
         this.resultType = resultType;
     }
 
@@ -66,36 +54,20 @@ public class ComparisonResult<T> implements Serializable {
         return name;
     }
 
-    public ImplementationPreferenceType getImplementationPreferenceType() {
-        return implementationPreferenceType;
+    public ImplementationPreference getImplementationPreference() {
+        return implementationPreference;
     }
 
     public Object[] getArguments() {
         return arguments;
     }
 
-    public T getCurrentImplementationResult() {
-        return currentImplementationResult;
+    public ProtoplastExecutionResult<T> getProtoplastExecutionResult() {
+        return protoplastExecutionResult;
     }
 
-    public long getCurrentImplementationExecutionTime() {
-        return currentImplementationExecutionTime;
-    }
-
-    public Exception getCurrentImplementationException() {
-        return currentImplementationException;
-    }
-
-    public T getEvolvedImplementationResult() {
-        return evolvedImplementationResult;
-    }
-
-    public long getEvolvedImplementationExecutionTime() {
-        return evolvedImplementationExecutionTime;
-    }
-
-    public Exception getEvolvedImplementationException() {
-        return evolvedImplementationException;
+    public EvolvedExecutionResult<T> getEvolvedExecutionResult() {
+        return evolvedExecutionResult;
     }
 
     public ResultType getResultType() {

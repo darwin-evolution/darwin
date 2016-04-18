@@ -23,7 +23,7 @@
  */
 package io.darwin;
 
-import io.darwin.execution.harness.CurrentExecutionHarness;
+import io.darwin.execution.harness.ProtoplastExecutionHarness;
 import io.darwin.execution.harness.EvolvedExecutionHarness;
 import org.testng.annotations.Test;
 
@@ -51,7 +51,7 @@ public class EvolutionTest {
         final Integer a = 1, b = 3, c = -1;
 
         Integer mainMethod = Evolution.<Integer>of("mainMethod")
-                .from(new CurrentExecutionHarness<Integer>() {
+                .from(new ProtoplastExecutionHarness<Integer>() {
                     @Override
                     public Integer execute() throws Exception {
                         arguments(a, b, c);

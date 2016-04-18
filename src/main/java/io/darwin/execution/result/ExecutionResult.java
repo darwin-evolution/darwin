@@ -26,30 +26,18 @@ package io.darwin.execution.result;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class ExecutionResult<T> implements Serializable {
+public abstract class ExecutionResult<T> implements Serializable {
 
-    T result;
-    long executionTime;
-    Exception exception;
+    long durationNs;
     Object[] arguments;
 
-    public ExecutionResult(Object[] arguments, T result, long executionTime, Exception exception) {
+    public ExecutionResult(Object[] arguments, long durationNs) {
         this.arguments = arguments;
-        this.result = result;
-        this.executionTime = executionTime;
-        this.exception = exception;
+        this.durationNs = durationNs;
     }
 
-    public T getResult() {
-        return result;
-    }
-
-    public long getExecutionTime() {
-        return executionTime;
-    }
-
-    public Exception getException() {
-        return exception;
+    public long getDurationNs() {
+        return durationNs;
     }
 
     public Object[] getArguments() {
@@ -63,9 +51,7 @@ public class ExecutionResult<T> implements Serializable {
 
         ExecutionResult<?> that = (ExecutionResult<?>) o;
 
-        if (executionTime != that.executionTime) return false;
-        if (result != null ? !result.equals(that.result) : that.result != null) return false;
-        if (exception != null ? !exception.equals(that.exception) : that.exception != null) return false;
+        if (durationNs != that.durationNs) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         return Arrays.equals(arguments, that.arguments);
 
@@ -73,19 +59,15 @@ public class ExecutionResult<T> implements Serializable {
 
     @Override
     public int hashCode() {
-        int result1 = result != null ? result.hashCode() : 0;
-        result1 = 31 * result1 + (int) (executionTime ^ (executionTime >>> 32));
-        result1 = 31 * result1 + (exception != null ? exception.hashCode() : 0);
-        result1 = 31 * result1 + Arrays.hashCode(arguments);
-        return result1;
+        int result = (int) (durationNs ^ (durationNs >>> 32));
+        result = 31 * result + Arrays.hashCode(arguments);
+        return result;
     }
 
     @Override
     public String toString() {
         return "ExecutionResult{" +
-                "result=" + result +
-                ", executionTime=" + executionTime +
-                ", exception=" + exception +
+                "durationNs=" + durationNs +
                 ", arguments=" + Arrays.toString(arguments) +
                 '}';
     }

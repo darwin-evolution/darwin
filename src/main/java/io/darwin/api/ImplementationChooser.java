@@ -23,10 +23,14 @@
  */
 package io.darwin.api;
 
-import io.darwin.execution.ImplementationPreferenceType;
+import io.darwin.execution.ImplementationPreference;
 
+/**
+ * This class represents api that let'a us choose which result, <br>
+ * from protoplast or from evolved implementatation, should be returned to caller.
+ */
 public abstract class ImplementationChooser {
 
-    public abstract ImplementationPreferenceType chooseImplementation(String evolutionName);
+    public abstract ImplementationPreference chooseImplementation(String evolutionName);
 
 }
