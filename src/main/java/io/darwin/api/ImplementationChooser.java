@@ -33,4 +33,12 @@ public abstract class ImplementationChooser {
 
     public abstract ImplementationPreference chooseImplementation(String evolutionName);
 
+    public boolean isEvolvedEnabled(String evolutionName) {
+        return chooseImplementation(evolutionName).equals(ImplementationPreference.EVOLVED);
+    }
+
+    public boolean isEvolvedDisabled(String evolutionName) {
+        return !isEvolvedEnabled(evolutionName);
+    }
+
 }

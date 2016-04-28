@@ -24,7 +24,6 @@ public class ProtoplastExceptionExecutionResult<T> extends ProtoplastExecutionRe
         ProtoplastExceptionExecutionResult<?> that = (ProtoplastExceptionExecutionResult<?>) o;
 
         return exception != null ? exception.equals(that.exception) : that.exception == null;
-
     }
 
     @Override

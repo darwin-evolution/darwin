@@ -1,6 +1,8 @@
 package io.darwin.typesafeconfig;
 
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import io.darwin.execution.ImplementationPreference;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -17,19 +19,22 @@ public class TypesafeConfigImplementationChooserBenchmark {
 
     @Benchmark
     public String chooseEnabledImplementation() {
-        ImplementationPreference evolvedEnabled = new TypesafeConfigImplementationChooser().chooseImplementation("EvolvedEnabled");
+        Config config = ConfigFactory.load("benchmark1K.conf");
+        ImplementationPreference evolvedEnabled = new TypesafeConfigImplementationChooser(config).chooseImplementation("EvolvedEnabled");
         return evolvedEnabled.name();
     }
 
     @Benchmark
     public String chooseDisabledImplementation() {
-        ImplementationPreference evolvedEnabled = new TypesafeConfigImplementationChooser().chooseImplementation("EvolvedDisabled");
+        Config config = ConfigFactory.load("benchmark1K.conf");
+        ImplementationPreference evolvedEnabled = new TypesafeConfigImplementationChooser(config).chooseImplementation("EvolvedDisabled");
         return evolvedEnabled.name();
     }
 
     @Benchmark
     public String chooseMissingImplementation() {
-        ImplementationPreference evolvedEnabled = new TypesafeConfigImplementationChooser().chooseImplementation("EvolvedMissing");
+        Config config = ConfigFactory.load("benchmark1K.conf");
+        ImplementationPreference evolvedEnabled = new TypesafeConfigImplementationChooser(config).chooseImplementation("EvolvedMissing");
         return evolvedEnabled.name();
     }
 
@@ -39,11 +44,10 @@ public class TypesafeConfigImplementationChooserBenchmark {
                 .warmupIterations(10)
                 .forks(1)
                 .threads(10)
-                .timeUnit(TimeUnit.MICROSECONDS)
+                .timeUnit(TimeUnit.MILLISECONDS)
                 .shouldFailOnError(true).shouldDoGC(true).build();
         new Runner(options).run();
 
         System.exit(1);
     }
-
 }

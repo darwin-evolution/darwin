@@ -51,28 +51,28 @@ public class HarnessExecutor<T> {
     }
 
     private ExecutionResult<T> executeHarness(ExecutionHarness<T> executionHarness) {
-        long executionStartMillis = System.currentTimeMillis();
+        long nanos = System.nanoTime();
         try {
             T result = executionHarness.execute();
-            return createValueExecutionResult(executionHarness, executionStartMillis, result);
+            return createValueExecutionResult(executionHarness, nanos, result);
         } catch (Exception e) {
-            return createExceptionExecutionResult(executionHarness, executionStartMillis, e);
+            return createExceptionExecutionResult(executionHarness, nanos, e);
         }
     }
 
-    private ExecutionResult<T> createExceptionExecutionResult(ExecutionHarness<T> executionHarness, long executionStartMillis, Exception e) {
+    private ExecutionResult<T> createExceptionExecutionResult(ExecutionHarness<T> executionHarness, long nanoTime, Exception e) {
         if (executionHarness instanceof ProtoplastExecutionHarness) {
-            return new ProtoplastExceptionExecutionResult<T>(executionHarness.getArguments(), (System.currentTimeMillis() - executionStartMillis), e);
+            return new ProtoplastExceptionExecutionResult<T>(executionHarness.getArguments(), (System.nanoTime() - nanoTime), e);
         } else {
-            return new EvolvedExceptionExecutionResult<T>(executionHarness.getArguments(), (System.currentTimeMillis() - executionStartMillis), e);
+            return new EvolvedExceptionExecutionResult<T>(executionHarness.getArguments(), (System.nanoTime() - nanoTime), e);
         }
     }
 
-    private ExecutionResult<T> createValueExecutionResult(ExecutionHarness<T> executionHarness, long executionStartMillis, T result) {
+    private ExecutionResult<T> createValueExecutionResult(ExecutionHarness<T> executionHarness, long nanoTime, T result) {
         if (executionHarness instanceof ProtoplastExecutionHarness) {
-            return new ProtoplastValueExecutionResult<T>(executionHarness.getArguments(), (System.currentTimeMillis() - executionStartMillis), result);
+            return new ProtoplastValueExecutionResult<T>(executionHarness.getArguments(), (System.nanoTime() - nanoTime), result);
         } else {
-            return new EvolvedValueExecutionResult<T>(executionHarness.getArguments(), (System.currentTimeMillis() - executionStartMillis), result);
+            return new EvolvedValueExecutionResult<T>(executionHarness.getArguments(), (System.nanoTime() - nanoTime), result);
         }
     }
 

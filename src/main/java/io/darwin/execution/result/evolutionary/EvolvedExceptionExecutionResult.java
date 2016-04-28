@@ -24,7 +24,6 @@ public class EvolvedExceptionExecutionResult<T> extends EvolvedExecutionResult<T
         EvolvedExceptionExecutionResult<?> that = (EvolvedExceptionExecutionResult<?>) o;
 
         return exception != null ? exception.equals(that.exception) : that.exception == null;
-
     }
 
     @Override

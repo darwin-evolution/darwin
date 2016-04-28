@@ -24,7 +24,6 @@ public class ProtoplastValueExecutionResult<T> extends ProtoplastExecutionResult
         ProtoplastValueExecutionResult<?> that = (ProtoplastValueExecutionResult<?>) o;
 
         return value != null ? value.equals(that.value) : that.value == null;
-
     }
 
     @Override

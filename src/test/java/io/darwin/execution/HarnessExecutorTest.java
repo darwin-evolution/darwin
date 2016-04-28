@@ -25,116 +25,122 @@ package io.darwin.execution;
 
 import io.darwin.execution.harness.ProtoplastExecutionHarness;
 import io.darwin.execution.result.ExecutionResult;
+import io.darwin.execution.result.protoplast.ProtoplastExceptionExecutionResult;
+import io.darwin.execution.result.protoplast.ProtoplastValueExecutionResult;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 
 public class HarnessExecutorTest {
 
     @Test
-    public void shouldCatchAnyExceptionThrownFromHarness() {
+    public void shouldCatchAnyExceptionThrownFromProtoplastHarness() {
         //given
-//        final IllegalStateException illegalStateException = new IllegalStateException();
-//
-//        //when
-//        ExecutionResult<Integer> integerExecutionResult = new HarnessExecutor<Integer>()
-//                .executeHarness(new ProtoplastExecutionHarness<Integer>() {
-//                    @Override
-//                    public Integer execute() throws Exception {
-//                        throw illegalStateException;
-//                    }
-//                });
-//
-//        //then
-//        assertThat(integerExecutionResult.getException()).isEqualTo(illegalStateException);
-//        assertThat(integerExecutionResult.getArguments()).isEmpty();
-//        assertThat(integerExecutionResult.getResult()).isNull();
-//    }
-//
-//    @Test
-//    public void shouldReturnIntegerResultFromHarness() {
-//        //given
-//        final Integer result = 100;
-//
-//        //when
-//        ExecutionResult<Integer> integerExecutionResult = new HarnessExecutor<Integer>()
-//                .executeHarness(new ProtoplastExecutionHarness<Integer>() {
-//                    @Override
-//                    public Integer execute() throws Exception {
-//                        return result;
-//                    }
-//                });
-//
-//        //then
-//        assertThat(integerExecutionResult.getException()).isNull();
-//        assertThat(integerExecutionResult.getArguments()).isEmpty();
-//        assertThat(integerExecutionResult.getResult()).isEqualTo(result);
-//    }
-//
-//    @Test
-//    public void shouldReturnBooleanResultFromHarness() {
-//        //given
-//
-//        //when
-//        ExecutionResult<Boolean> integerExecutionResult = new HarnessExecutor<Boolean>()
-//                .executeHarness(new ProtoplastExecutionHarness<Boolean>() {
-//                    @Override
-//                    public Boolean execute() throws Exception {
-//                        return false;
-//                    }
-//                });
-//
-//        //then
-//        assertThat(integerExecutionResult.getException()).isNull();
-//        assertThat(integerExecutionResult.getArguments()).isEmpty();
-//        assertThat(integerExecutionResult.getResult()).isFalse();
-//    }
-//
-//    @Test
-//    public void shouldReturnIntegerArrayResultFromHarness() {
-//        //given
-//        final Integer[] integers = {1,2};
-//
-//        //when
-//        ExecutionResult<Integer[]> integerExecutionResult = new HarnessExecutor<Integer[]>()
-//                .executeHarness(new ProtoplastExecutionHarness<Integer[]>() {
-//                    @Override
-//                    public Integer[] execute() throws Exception {
-//                        return integers;
-//                    }
-//                });
-//
-//        //then
-//        assertThat(integerExecutionResult.getException()).isNull();
-//        assertThat(integerExecutionResult.getArguments()).isEmpty();
-//        assertThat(integerExecutionResult.getResult()).isNotEmpty();
-//        assertThat(integerExecutionResult.getResult()).isEqualTo(integers);
-//    }
-//
-//
-//    @Test
-//    public void shouldReturnIntegerListResultFromHarness() {
-//        //given
-//        final List<Integer> integers = new ArrayList<Integer>();
-//        integers.add(1);
-//        integers.add(2);
-//
-//        //when
-//        ExecutionResult<List<Integer>> integerExecutionResult = new HarnessExecutor<List<Integer>>()
-//                .executeHarness(new ProtoplastExecutionHarness<List<Integer>>() {
-//                    @Override
-//                    public List<Integer> execute() throws Exception {
-//                        return integers;
-//                    }
-//                });
-//
-//        //then
-//        assertThat(integerExecutionResult.getException()).isNull();
-//        assertThat(integerExecutionResult.getArguments()).isEmpty();
-//        assertThat(integerExecutionResult.getResult()).isNotEmpty();
-//        assertThat(integerExecutionResult.getResult()).isEqualTo(integers);
+        final IllegalStateException illegalStateException = new IllegalStateException();
+
+        //when
+        ExecutionResult<Integer> integerExecutionResult = new HarnessExecutor<Integer>()
+                .executeProtoplastHarness(new ProtoplastExecutionHarness<Integer>() {
+                    @Override
+                    public Integer execute() throws Exception {
+                        throw illegalStateException;
+                    }
+                });
+
+        //then
+        assertThat(integerExecutionResult.getArguments()).isEmpty();
+
+        assertThat(integerExecutionResult).isExactlyInstanceOf(ProtoplastExceptionExecutionResult.class);
+        assertThat(((ProtoplastExceptionExecutionResult)integerExecutionResult).getException()).isEqualTo(illegalStateException);
+    }
+
+    @Test
+    public void shouldReturnIntegerResultFromHarness() {
+        //given
+        final Integer result = 100;
+
+        //when
+        ExecutionResult<Integer> integerExecutionResult = new HarnessExecutor<Integer>()
+                .executeProtoplastHarness(new ProtoplastExecutionHarness<Integer>() {
+                    @Override
+                    public Integer execute() throws Exception {
+                        return result;
+                    }
+                });
+
+        //then
+        assertThat(integerExecutionResult.getArguments()).isEmpty();
+
+        assertThat(integerExecutionResult).isExactlyInstanceOf(ProtoplastValueExecutionResult.class);
+        assertThat(((ProtoplastValueExecutionResult)integerExecutionResult).getValue()).isEqualTo(result);
+    }
+
+    @Test
+    public void shouldReturnBooleanResultFromHarness() {
+        //given
+
+        //when
+        ExecutionResult<Boolean> integerExecutionResult = new HarnessExecutor<Boolean>()
+                .executeProtoplastHarness(new ProtoplastExecutionHarness<Boolean>() {
+                    @Override
+                    public Boolean execute() throws Exception {
+                        return false;
+                    }
+                });
+
+        //then
+        assertThat(integerExecutionResult.getArguments()).isEmpty();
+
+        assertThat(integerExecutionResult).isExactlyInstanceOf(ProtoplastValueExecutionResult.class);
+        assertThat(((ProtoplastValueExecutionResult<Boolean>)integerExecutionResult).getValue()).isFalse();
+    }
+
+    @Test
+    public void shouldReturnIntegerArrayResultFromHarness() {
+        //given
+        final Integer[] integers = {1,2};
+
+        //when
+        ExecutionResult<Integer[]> integerExecutionResult = new HarnessExecutor<Integer[]>()
+                .executeProtoplastHarness(new ProtoplastExecutionHarness<Integer[]>() {
+                    @Override
+                    public Integer[] execute() throws Exception {
+                        return integers;
+                    }
+                });
+
+        //then
+        assertThat(integerExecutionResult.getArguments()).isEmpty();
+
+        assertThat(integerExecutionResult).isExactlyInstanceOf(ProtoplastValueExecutionResult.class);
+        assertThat(((ProtoplastValueExecutionResult<Integer[]>)integerExecutionResult).getValue()).isEqualTo(integers);
+    }
+
+
+    @Test
+    public void shouldReturnIntegerListResultFromHarness() {
+        //given
+        final List<Integer> integers = new ArrayList<Integer>();
+        integers.add(1);
+        integers.add(2);
+
+        //when
+        ExecutionResult<List<Integer>> integerExecutionResult = new HarnessExecutor<List<Integer>>()
+                .executeProtoplastHarness(new ProtoplastExecutionHarness<List<Integer>>() {
+                    @Override
+                    public List<Integer> execute() throws Exception {
+                        return integers;
+                    }
+                });
+
+        //then
+        assertThat(integerExecutionResult.getArguments()).isEmpty();
+
+        assertThat(integerExecutionResult).isExactlyInstanceOf(ProtoplastValueExecutionResult.class);
+        assertThat(((ProtoplastValueExecutionResult<List<Integer>>)integerExecutionResult).getValue()).isEqualTo(integers);
     }
 
 

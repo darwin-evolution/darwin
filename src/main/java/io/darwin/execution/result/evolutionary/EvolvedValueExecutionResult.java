@@ -24,7 +24,6 @@ public class EvolvedValueExecutionResult<T> extends EvolvedExecutionResult<T> im
         EvolvedValueExecutionResult<?> that = (EvolvedValueExecutionResult<?>) o;
 
         return value != null ? value.equals(that.value) : that.value == null;
-
     }
 
     @Override

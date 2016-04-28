@@ -25,31 +25,24 @@ package io.darwin;
 
 import io.darwin.api.EvolutionResultConsumer;
 import io.darwin.api.ImplementationChooser;
-import io.darwin.async.AsyncEvolutionBuilder;
 import io.darwin.execution.HarnessExecutor;
 import io.darwin.execution.ImplementationPreference;
-import io.darwin.execution.harness.ProtoplastExecutionHarness;
 import io.darwin.execution.harness.EvolvedExecutionHarness;
+import io.darwin.execution.harness.ProtoplastExecutionHarness;
 import io.darwin.execution.result.ExceptionExecutionResult;
 import io.darwin.execution.result.ExecutionResult;
 import io.darwin.execution.result.ValueExecutionResult;
 import io.darwin.execution.result.comparison.ComparisonResult;
 import io.darwin.execution.result.comparison.ResultComparator;
-import io.darwin.execution.result.protoplast.ProtoplastExecutionResult;
 import io.darwin.execution.result.evolutionary.EvolvedExecutionResult;
+import io.darwin.execution.result.protoplast.ProtoplastExecutionResult;
 import io.darwin.slf4j.Slf4jEvolutionResultConsumer;
 import io.darwin.typesafeconfig.TypesafeConfigImplementationChooser;
-
-import java.util.concurrent.TimeUnit;
 
 public class Evolution {
 
     public static <T> EvolutionContext<T> of(String name) {
         return new EvolutionContext<T>(name);
-    }
-
-    public static AsyncEvolutionBuilder.EvolutionTimeout ms(Long evolutionTimeout) {
-        return new AsyncEvolutionBuilder.EvolutionTimeout(evolutionTimeout, TimeUnit.MILLISECONDS);
     }
 
     public static class FromEvolutionBuilder<T> {
@@ -97,7 +90,7 @@ public class Evolution {
             if (preferredImplementationResult instanceof ValueExecutionResult) {
                 return ((ValueExecutionResult<T>) preferredImplementationResult).getValue();
             } else {
-                throw ((ExceptionExecutionResult<T>)preferredImplementationResult).getException();
+                throw ((ExceptionExecutionResult<T>) preferredImplementationResult).getException();
             }
         }
 
@@ -132,6 +125,15 @@ public class Evolution {
         public FromEvolutionBuilder<T> from(ProtoplastExecutionHarness<T> protoplastExecutionHarness) {
             return new FromEvolutionBuilder<T>(this, protoplastExecutionHarness);
         }
+
+        public boolean isEnabled(String name) {
+            return this.implementationChooser.isEvolvedEnabled(name);
+        }
+
+        public boolean isDisabled(String name) {
+            return this.implementationChooser.isEvolvedDisabled(name);
+        }
+
     }
 }
 
