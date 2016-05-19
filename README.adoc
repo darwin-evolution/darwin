@@ -1,6 +1,134 @@
 Darwin
 -------
-+
 image:https://travis-ci.org/darwin-evolution/darwin.svg[alt="Travis"]
-+
 image:https://img.shields.io/badge/license-MIT-brightgreen.svg[alt="MIT License"]
+
+== Why?
+Darwin was creataed to ease refactoring. He allows You to test Your new
+implementation, in any environment, even in production. Darwin basically
+executes existing and new implementations comparing results, and logging
+the outcome. He allows you to choose which outcome to return, the 'evolved'
+or it's 'protoplast'.
+
+== How?
+
+=== Coding
+
+Darwin has very little dependencies:
+
+* http://www.slf4j.org/[slf4j]
+* https://github.com/typesafehub/config[typesafe-config]
+* http://metrics.dropwizard.io/3.1.0/[dropwizard-metrics]
+
+that's all he needs to help Your code Evolve!
+
+=== Evolving
+
+Basic idea in darwin is evolution, it is transition from 'protoplast' to 'evolved'
+implementation. This process is monitored and logged, increasing safety
+of your refactorings, and providing an easy way to test backward compatibility.
+
+
+==== So evolve!
+
+Given two implementations: calculateMax and calculateMaxWithMath
+we can write a simple evolution:
+
+
+[source,java]
+----
+        final Integer a = 1, b = 3, c = -1; // <1>
+
+        Integer max = Evolution.<Integer>of("calculateMax") // <2>
+                .from(new ProtoplastExecutionHarness<Integer>() { // <3>
+                    @Override
+                    public Integer execute() throws Exception {
+                        arguments(a, b, c); // <4>
+                        return calculateMax(a, b, c); // <5>
+                    }
+                })
+                .to(new EvolvedExecutionHarness<Integer>() { // <6>
+                    @Override
+                    public Integer execute() throws Exception {
+                        arguments(a, b, c); // <7>
+                        return calculateMax2(a, b, c); // <8>
+                    }
+                })
+                .evolve(); // <9>
+----
+<1> Define arguments
+<2> Create Evolution named "calculateMax"
+<3> Create Protoplast execution harness - it will hold our old implementation
+<4> We log protoplast arguments
+<5> We execute protoplast implementation
+<6> Create Evolved executution harness - it will hold our new implementation
+<7> We log evolved arguments
+<8> we execute evolved implementation
+<9> And we return configured result either (protoplast or evolved>)
+
+Such configuration will result in slf4j log message like:
+
+"calculateMax"|"PROTOPLAST"|"1463682597919"|"OK"||"249896"||||"171597"|||
+
+=== Maven
+
+Base dependency (<<enable bintray repository>>):
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.darwin</groupId>
+    <artifactId>darwin</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+----
+
+=== [[enabling-bintray-repository]]Enabling bintray repository
+
+To enable bintray repository add this to your settings.xml:
+
+[source,xml]
+----
+<profiles>
+    <profile>
+        <repositories>
+            <repository>
+                <snapshots>
+                    <enabled>false</enabled>
+                </snapshots>
+                <id>bintray-darwin-evolution-maven</id>
+                <name>bintray</name>
+                <url>http://dl.bintray.com/darwin-evolution/maven</url>
+            </repository>
+        </repositories>
+        <pluginRepositories>
+            <pluginRepository>
+                <snapshots>
+                    <enabled>false</enabled>
+                </snapshots>
+                <id>bintray-darwin-evolution-maven</id>
+                <name>bintray-plugins</name>
+                <url>http://dl.bintray.com/darwin-evolution/maven</url>
+            </pluginRepository>
+        </pluginRepositories>
+        <id>bintray</id>
+    </profile>
+</profiles>
+
+<activeProfiles>
+    <activeProfile>bintray</activeProfile>
+</activeProfiles>
+----
+
+
+[source,ruby]
+----
+require 'sinatra' // <1>
+
+get '/hi' do // <2>
+  "Hello World!" // <3>
+end
+----
+<1> Library import
+<2> URL mapping
+<3> Content for response
