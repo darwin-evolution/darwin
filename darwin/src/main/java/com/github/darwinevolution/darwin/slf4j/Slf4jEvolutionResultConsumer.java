@@ -91,9 +91,7 @@ public class Slf4jEvolutionResultConsumer<T> extends EvolutionResultConsumer<T> 
 
                 appendValueResult((ValueExecutionResult) executionResult, sb);
                 sb.append(VALUE_SEPARATOR);
-
             }
-
         } else {
             sb.append(VALUE_SEPARATOR);
             sb.append(VALUE_SEPARATOR);
@@ -105,16 +103,18 @@ public class Slf4jEvolutionResultConsumer<T> extends EvolutionResultConsumer<T> 
                 || shouldPrintDetails(resultType, resultConsumerConfiguration)) {
             sb.append(QUOTE).append("[");
             for (Object argument : executionResult.getArguments()) {
-                sb.append(escapeQuotes(argument)).append(",");
+                sb.append(escapeQuotes(argument)).append(',');
             }
-            removeLastChar(sb);
+            removeLastColon(sb);
             sb.append("]").append(QUOTE);
         }
         sb.append(VALUE_SEPARATOR);
     }
 
-    private static void removeLastChar(StringBuffer sb) {
-        sb.deleteCharAt(sb.length()-1);
+    private static void removeLastColon(StringBuffer sb) {
+        if (sb.length() > 0 && sb.charAt(sb.length()-1) == ',') {
+            sb.deleteCharAt(sb.length()-1);
+        }
     }
 
     private static void appendValueResult(ValueExecutionResult executionResult, StringBuffer sb) {
@@ -150,4 +150,5 @@ public class Slf4jEvolutionResultConsumer<T> extends EvolutionResultConsumer<T> 
     private static String escapeQuotes(Object value) {
         return String.valueOf(value).replaceAll("\"", "\\\"");
     }
+
 }

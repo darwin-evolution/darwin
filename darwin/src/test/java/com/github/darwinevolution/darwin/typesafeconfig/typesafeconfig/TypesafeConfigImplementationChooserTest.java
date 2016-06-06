@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.darwinevolution.darwin.typesafeconfig;
+package com.github.darwinevolution.darwin.typesafeconfig.typesafeconfig;
 
 import com.github.darwinevolution.darwin.execution.ImplementationPreference;
-import org.testng.annotations.Test;
+import com.github.darwinevolution.darwin.typesafeconfig.TypesafeConfigImplementationChooser;
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

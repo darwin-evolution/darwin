@@ -23,4 +23,9 @@
  */
 package com.github.darwinevolution.darwin.evolution.protoplast;
 
+/**
+ * Interface that marks anything that has something to do with protoplast implementation.
+ *
+ * @param <T> type of result
+ */
 public interface Protoplast<T> { }

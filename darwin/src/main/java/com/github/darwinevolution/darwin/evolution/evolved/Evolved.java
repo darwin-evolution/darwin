@@ -23,4 +23,9 @@
  */
 package com.github.darwinevolution.darwin.evolution.evolved;
 
+/**
+ * Interface that marks anything that has something to do with evolved imlementation.
+ *
+ * @param <T> type of result
+ */
 public interface Evolved<T> { }

@@ -33,13 +33,13 @@ import com.github.darwinevolution.darwin.execution.result.protoplast.ProtoplastV
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.assertj.core.api.Assertions;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import java.util.List;
 
 public class EvolutionTest {
 
-    public Integer calculateMax(Integer a, Integer b, Integer c) {
+    private Integer calculateMax(Integer a, Integer b, Integer c) {
         if (a > b) {
             if (c > a) {
                 return c;
@@ -51,10 +51,9 @@ public class EvolutionTest {
         }
     }
 
-    public Integer calculateMax2(Integer a, Integer b, Integer c) {
+    private Integer calculateMax2(Integer a, Integer b, Integer c) {
         return Math.max(Math.max(a, b), c);
     }
-
 
     @Test
     public void shouldEvolve() throws Exception {
@@ -76,30 +75,13 @@ public class EvolutionTest {
                     }
                 })
                 .evolve();
-
-
-
-        Integer calc = Evolution.<Integer>of("calc")
-                .from(new ProtoplastExecutionHarness<Integer>() {
-                    @Override
-                    public Integer execute() throws Exception {
-                        arguments(1, 1);
-                        return 1 + 1;
-                    }
-                }).to(new EvolvedExecutionHarness<Integer>() {
-                    @Override
-                    public Integer execute() throws Exception {
-                        arguments(2, 2);
-                        return 2 + 2;
-                    }
-                }).evolve();
     }
 
     @Test
     public void commonsLangBackwardCompatibility() throws Exception {
-        final String value = "fa";
+        final String value = "some definitely not blank string";
 
-        Boolean isBlank = Evolution.<Boolean>of("StringUtilsisBlank")
+        Boolean isBlank = Evolution.<Boolean>of("StringUtilsIsBlank")
                 .withEvolutionResultConsumer(new EvolutionResultConsumer<Boolean>() {
                     @Override
                     public void consumeResults(ComparisonResult<Boolean> comparisonResult, ResultConsumerConfiguration resultConsumerConfiguration) {
@@ -121,7 +103,6 @@ public class EvolutionTest {
                     }
                 })
                 .evolve();
-
 
         List allInterfaces = Evolution.<List>of("allInterfaces")
                 .withEvolutionResultConsumer(new EvolutionResultConsumer<List>() {

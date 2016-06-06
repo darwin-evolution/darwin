@@ -89,7 +89,6 @@ public class Evolution {
         private EvolvedExecutionHarness<T> evolvedExecutionHarness;
         private HarnessExecutor<T> harnessExecutor;
         private ResultComparator<T> resultComparator;
-        private ResultConsumerConfiguration resultConsumerConfiguration = new ResultConsumerConfiguration();
 
         public EvolutionBuilder(EvolutionContext<T> evolutionContext, ProtoplastExecutionHarness<T> protoplastExecutionHarness, EvolvedExecutionHarness<T> evolvedExecutionHarness) {
             this.evolutionContext = evolutionContext;
@@ -97,6 +96,7 @@ public class Evolution {
             this.evolvedExecutionHarness = evolvedExecutionHarness;
             this.harnessExecutor = new HarnessExecutor<T>();
             this.resultComparator = new ResultComparator<T>();
+
         }
 
         public T evolve() throws Exception {
@@ -119,7 +119,7 @@ public class Evolution {
 
         private void consumeResults(ImplementationPreference implementationPreference, ProtoplastExecutionResult<T> protoplastExecutionResult, EvolvedExecutionResult<T> evolvedExecutionResult) {
             ComparisonResult<T> comparisonResult = resultComparator.compareResults(evolutionContext.name, implementationPreference, protoplastExecutionResult, evolvedExecutionResult, evolutionContext.exceptionResultComparator, evolutionContext.valueResultComparator);
-            evolutionContext.evolutionResultConsumer.consumeResults(comparisonResult, resultConsumerConfiguration);
+            evolutionContext.evolutionResultConsumer.consumeResults(comparisonResult, evolutionContext.resultConsumerConfiguration);
         }
 
     }
@@ -128,7 +128,7 @@ public class Evolution {
         private String name;
         private ImplementationChooser implementationChooser;
         private EvolutionResultConsumer<T> evolutionResultConsumer;
-        private ResultConsumerConfiguration resultConsumerConfiguration;
+        private ResultConsumerConfiguration resultConsumerConfiguration = new ResultConsumerConfiguration();
         private ValueResultComparator<T> valueResultComparator;
         private ExceptionResultComparator exceptionResultComparator;
 

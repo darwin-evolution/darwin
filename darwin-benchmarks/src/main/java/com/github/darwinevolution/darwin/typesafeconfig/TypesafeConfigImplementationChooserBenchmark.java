@@ -38,7 +38,6 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 public class TypesafeConfigImplementationChooserBenchmark {
 
-
     @Benchmark
     public String chooseEnabledImplementation() {
         Config config = ConfigFactory.load("benchmark1K.conf");

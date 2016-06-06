@@ -27,7 +27,7 @@ import com.github.darwinevolution.darwin.execution.result.protoplast.ProtoplastV
 import com.github.darwinevolution.darwin.execution.harness.ProtoplastExecutionHarness;
 import com.github.darwinevolution.darwin.execution.result.ExecutionResult;
 import com.github.darwinevolution.darwin.execution.result.protoplast.ProtoplastExceptionExecutionResult;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;

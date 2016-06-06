@@ -25,8 +25,19 @@ package com.github.darwinevolution.darwin.api;
 
 import com.github.darwinevolution.darwin.execution.result.comparison.ComparisonResult;
 
+/**
+ * Class that allows to consume evolution result.
+ *
+ * @param <T> - type of result
+ */
 public abstract class EvolutionResultConsumer<T> {
 
+    /**
+     * Method called to consume evolution results.
+     *
+     * @param comparisonResult holds evolution's execution comparison result
+     * @param resultConsumerConfiguration holds consumer configuration
+     */
     public abstract void consumeResults(ComparisonResult<T> comparisonResult, ResultConsumerConfiguration resultConsumerConfiguration);
 
 }

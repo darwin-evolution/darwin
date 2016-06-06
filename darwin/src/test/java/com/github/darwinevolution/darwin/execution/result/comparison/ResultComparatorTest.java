@@ -30,7 +30,7 @@ import com.github.darwinevolution.darwin.execution.result.evolutionary.EvolvedVa
 import com.github.darwinevolution.darwin.execution.result.protoplast.ProtoplastExceptionExecutionResult;
 import com.github.darwinevolution.darwin.execution.result.protoplast.ProtoplastValueExecutionResult;
 import org.assertj.core.api.Assertions;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 public class ResultComparatorTest {
 

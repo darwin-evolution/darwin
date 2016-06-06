@@ -23,6 +23,11 @@
  */
 package com.github.darwinevolution.darwin.api;
 
+/**
+ * Interface for implementation that allows to provide custom value comparator.
+ *
+ * @param <T> type of value
+ */
 public interface ValueResultComparator<T> {
 
     boolean areValuesEqual(T protoplastResult, T evolvedResult);
