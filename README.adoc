@@ -66,9 +66,13 @@ we can write a simple evolution:
 <8> we execute evolved implementation
 <9> And we return configured result either (protoplast or evolved)
 
-Such configuration will result in slf4j log message in category darwin.evolution :
+Such configuration will result in slf4j log message in category **darwin.evolution** :
 
-"calculateMax"|"PROTOPLAST"|"1463682597919"|"OK"||"249896"||||"171597"|||
+[source,csv]
+----
+       "calculateMax"|"PROTOPLAST"|"1463682597919"|"OK"||"249896"||||"171597"|||
+----
+
 
 ==== Choosing implementation
 
