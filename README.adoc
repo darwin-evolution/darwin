@@ -64,71 +64,66 @@ we can write a simple evolution:
 <6> Create Evolved executution harness - it will hold our new implementation
 <7> We log evolved arguments
 <8> we execute evolved implementation
-<9> And we return configured result either (protoplast or evolved>)
+<9> And we return configured result either (protoplast or evolved)
 
-Such configuration will result in slf4j log message like:
+Such configuration will result in slf4j log message in category darwin.evolution :
 
 "calculateMax"|"PROTOPLAST"|"1463682597919"|"OK"||"249896"||||"171597"|||
 
+==== Choosing implementation
+
+Darwin works out of the box, by logging via slf4j and using Typesafe Config
+to choose which implementation's execution result should be returned to caller.
+
+[source,java]
+----
+        public abstract class ImplementationChooser {
+
+            public abstract ImplementationPreference chooseImplementation(String evolutionName);
+        ...
+
+        }
+----
+
+
+Decision is made using implemntation of ImplementationChooser.chooseImplementation.
+Default implementation comes from TypesafeConfigImplementationChooser. You can configure
+your implementation chooser by supplying your own implementation of ImplementationChooser,
+or you can configure default chooser with config.
+
+Default chooser looks for configuration variable according to scheme:
+
+[source,java]
+----
+       darwin.evolution.calculateMax.evolved = true
+----
+
 === Maven
 
-Base dependency (<<enable bintray repository>>):
+Base dependency:
 
 [source,xml]
 ----
 <dependency>
-    <groupId>io.darwin</groupId>
+    <groupId>com.github.darwin-evolution</groupId>
     <artifactId>darwin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.9.1</version>
 </dependency>
 ----
 
-=== [[enabling-bintray-repository]]Enabling bintray repository
+=== Logging in JSON format
 
-To enable bintray repository add this to your settings.xml:
+To log evolution information, ComparisonResult to be precise in JSON format
+we need to add extra dependency:
+
 
 [source,xml]
 ----
-<profiles>
-    <profile>
-        <repositories>
-            <repository>
-                <snapshots>
-                    <enabled>false</enabled>
-                </snapshots>
-                <id>bintray-darwin-evolution-maven</id>
-                <name>bintray</name>
-                <url>http://dl.bintray.com/darwin-evolution/maven</url>
-            </repository>
-        </repositories>
-        <pluginRepositories>
-            <pluginRepository>
-                <snapshots>
-                    <enabled>false</enabled>
-                </snapshots>
-                <id>bintray-darwin-evolution-maven</id>
-                <name>bintray-plugins</name>
-                <url>http://dl.bintray.com/darwin-evolution/maven</url>
-            </pluginRepository>
-        </pluginRepositories>
-        <id>bintray</id>
-    </profile>
-</profiles>
-
-<activeProfiles>
-    <activeProfile>bintray</activeProfile>
-</activeProfiles>
+<dependency>
+    <groupId>com.github.darwin-evolution</groupId>
+    <artifactId>darwin-jackson</artifactId>
+    <version>0.9.1</version>
+</dependency>
 ----
 
-
-[source,ruby]
-----
-require 'sinatra' // <1>
-
-get '/hi' do // <2>
-  "Hello World!" // <3>
-end
-----
-<1> Library import
-<2> URL mapping
-<3> Content for response
+We're using jackson because it is most popular JSON serializer for JavaEE projects.
