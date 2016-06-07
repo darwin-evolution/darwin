@@ -8,6 +8,8 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>darwin-michrobenchmarks</artifactId>
 
+    <name>Darwin - Micro Benchmarks </name>
+
     <properties>
         <jmh.version>1.11.2</jmh.version>
     </properties>

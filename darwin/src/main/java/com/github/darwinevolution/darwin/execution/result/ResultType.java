@@ -23,19 +23,65 @@
  */
 package com.github.darwinevolution.darwin.execution.result;
 
+/**
+ * Enum that contains values representing outcome of comparing results of executing protoplast and evolved implementations.
+ */
 public enum ResultType {
 
+    /**
+     * When {@link com.github.darwinevolution.darwin.evolution.evolved.Evolved}
+     * and {@link com.github.darwinevolution.darwin.evolution.protoplast.Protoplast}
+     * implementations both returned values,
+     * and those values match according to {@link com.github.darwinevolution.darwin.api.ValueResultComparator#areValuesEqual(Object, Object)}
+     */
     OK,
+
+    /**
+     * When {@link com.github.darwinevolution.darwin.evolution.evolved.Evolved}
+     * and {@link com.github.darwinevolution.darwin.evolution.protoplast.Protoplast}
+     * implementations both thrown exceptions,
+     * and those exceptions match according to {@link com.github.darwinevolution.darwin.api.ExceptionResultComparator#areExceptionsEqual(Exception, Exception)}
+     */
     OK_EXCEPTIONS,
+
+    /**
+     * When {@link com.github.darwinevolution.darwin.evolution.evolved.Evolved}
+     * and {@link com.github.darwinevolution.darwin.evolution.protoplast.Protoplast}
+     * implementations both thrown exceptions,
+     * but those exceptions do not match according to {@link com.github.darwinevolution.darwin.api.ExceptionResultComparator#areExceptionsEqual(Exception, Exception)}
+     */
     ERROR_DIFFERENT_EXCEPTIONS,
+
+    /**
+     * When {@link com.github.darwinevolution.darwin.evolution.evolved.Evolved}
+     * and {@link com.github.darwinevolution.darwin.evolution.protoplast.Protoplast}
+     * implementations both returned values,
+     * but those values do not match according to {@link com.github.darwinevolution.darwin.api.ValueResultComparator#areValuesEqual(Object, Object)}
+     */
     ERROR_DIFFERENT_RESULTS,
+
+    /**
+     * When either {@link com.github.darwinevolution.darwin.evolution.evolved.Evolved}
+     * or {@link com.github.darwinevolution.darwin.evolution.protoplast.Protoplast}
+     * implementation returned value and other thrown exception.
+     */
     ERROR_EXCEPTION_VS_RESULT,
+
+    /**
+     * Initial undefined state.
+     */
     INVALID_STATE;
 
+    /**
+     * @return true if result is some form of error
+     */
     public boolean isError() {
         return this.equals(ERROR_DIFFERENT_EXCEPTIONS) || this.equals(ERROR_DIFFERENT_RESULTS) || this.equals(ERROR_EXCEPTION_VS_RESULT) || this.equals(INVALID_STATE);
     }
 
+    /**
+     * @return true if result is some form of success
+     */
     public boolean isSuccess() {
         return this.equals(OK) || this.equals(OK_EXCEPTIONS);
     }

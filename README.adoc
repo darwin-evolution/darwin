@@ -1,4 +1,4 @@
-__Darwin
+Darwin
 -------
 image:https://travis-ci.org/darwin-evolution/darwin.svg[alt="Travis"]
 image:https://img.shields.io/badge/license-MIT-brightgreen.svg[alt="MIT License"]
@@ -35,6 +35,7 @@ Given two implementations: calculateMax and calculateMaxWithMath
 we can write a simple evolution:
 
 
+.Sample evolution
 [source,java]
 ----
         final Integer a = 1, b = 3, c = -1; // <1>
@@ -66,7 +67,7 @@ we can write a simple evolution:
 <8> we execute evolved implementation
 <9> And we return configured result either (protoplast or evolved)
 
-Such configuration will result in slf4j log message in category **darwin.evolution** :
+Such configuration will result in slf4j log message in trace level in category **darwin.evolution** :
 
 [source,csv]
 ----
@@ -164,4 +165,34 @@ Sample json output, that will be logged to slf4j (TRACE, darwin.evolution):
 === Default result logging
 
 By default, results are logged in psv (pipe separated values) format, to slf4j.
-It logs in **TRACE** treshold under category: **darwin.evolution**
+It logs in **TRACE** level under category: **darwin.evolution**.
+Format is following:
+
+
+.PSV layout
+----
+
+"evolution name"|"chosen implementation"|"execution timestamp"|"result code"|"[protopast arguments]"|"protoplast duration"|"protoplast exception"|"protoplast value"|"[evovled arguments]"|"evolved duration"|"evolved exception"|"evolved value"|
+
+----
+
+.Description
+* evolution name - name of the evolution as provided
+* choosen implementation - which implementation's result was returned
+** **PROTOPLAST** - for protoplast impelementation's result
+** **EVOLVED** - for evolved implementation's result
+* execution timestamp - java timestamp of begining of execution
+* result code - code denoting result of comparison (com.github.darwinevolution.darwin.execution.result.ResultType)
+** **OK** - if both implementations returned values, and values match according to provided **ValueResultComparator**
+** **OK_EXCEPTIONS** - if both implementations thrown exceptions, and those exceptions match according to provided **ExceptionResultComparator**
+** **ERROR_DIFFERENT_EXCEPTIONS** - if both implementations thrown exceptions, and those exceptions do not match according to provided **ExceptionResultComparator**
+** **ERROR_DIFFERENT_RESULTS** - if both implementations returned values, and values do not match according to provided **ValueResultComparator**
+** **ERROR_EXCEPTION_VS_RESULT** - if either impelementation returned value, and the other one thrown exception
+* protoplast arguments - conatins list of arguments provided to protoplast implementation
+* protoplast duration - duration of protoplast execution in ns
+* protoplast exception - message from exception thrown by protoplast implementation
+* protoplast value - **String.valueOf** from value retunred by protoplast implementation
+* evolved arguments - conatins list of arguments provided to evolved implementation
+* evolved duration - duration of evolved execution in ns
+* evolved exception - message from exception thrown by evolved implementation
+* evolved value - **String.valueOf** from value retunred by evolved implementation
