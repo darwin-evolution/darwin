@@ -34,7 +34,6 @@ of your refactorings, and providing an easy way to test backward compatibility.
 Given two implementations: calculateMax and calculateMaxWithMath
 we can write a simple evolution:
 
-
 .Sample evolution
 [source,java]
 ----
@@ -67,7 +66,7 @@ we can write a simple evolution:
 <8> we execute evolved implementation
 <9> And we return configured result either (protoplast or evolved)
 
-Such configuration will result in slf4j log message in trace level in category **darwin.evolution** :
+Such configuration will result in slf4j log message in **trace** level in category **darwin.evolution** :
 
 [source,csv]
 ----
@@ -89,7 +88,6 @@ implementation is preferred.
 
             public abstract ImplementationPreference chooseImplementation(String evolutionName);
         ...
-
         }
 ----
 
@@ -103,7 +101,7 @@ Default chooser looks for configuration variable according to scheme:
 
 [source,java]
 ----
-       darwin.evolution.calculateMax.evolved = true
+       darwin.evolution.<evolutionName>.evolved = true
 ----
 
 Simplest way to provide it, is via system properties:
