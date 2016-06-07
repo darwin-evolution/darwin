@@ -1,4 +1,4 @@
-Darwin
+__Darwin
 -------
 image:https://travis-ci.org/darwin-evolution/darwin.svg[alt="Travis"]
 image:https://img.shields.io/badge/license-MIT-brightgreen.svg[alt="MIT License"]
@@ -24,7 +24,7 @@ that's all he needs to help Your code Evolve!
 
 === Evolving
 
-Basic idea in darwin is evolution, it is transition from 'protoplast' to 'evolved'
+Basic idea in darwin is evolution, it is transition from **'protoplast'** to **'evolved'**
 implementation. This process is monitored and logged, increasing safety
 of your refactorings, and providing an easy way to test backward compatibility.
 
@@ -76,8 +76,11 @@ Such configuration will result in slf4j log message in category **darwin.evoluti
 
 ==== Choosing implementation
 
-Darwin works out of the box, by logging via slf4j and using Typesafe Config
-to choose which implementation's execution result should be returned to caller.
+Darwin works out of the box by returning **'protoplast'** implementation's result.
+To choose which implementation's result should be returned to caller, Darwin uses
+ImplementationChooser. By default it uses Typesafe Config, to lookup which
+implementation is preferred.
+
 
 [source,java]
 ----
@@ -102,6 +105,14 @@ Default chooser looks for configuration variable according to scheme:
        darwin.evolution.calculateMax.evolved = true
 ----
 
+Simplest way to provide it, is via system properties:
+[source,java]
+----
+    -Ddarwin.evolution.calculateMax.evolved=true
+----
+
+or if you want to unleash full power of typesafe config go visit https://github.com/typesafehub/config[it's homepage.]
+
 === Maven
 
 Base dependency:
@@ -117,8 +128,7 @@ Base dependency:
 
 === Logging in JSON format
 
-To log evolution information, ComparisonResult to be precise in JSON format
-we need to add extra dependency:
+To log evolution information in JSON format we need to add extra dependency:
 
 
 [source,xml]
@@ -131,3 +141,27 @@ we need to add extra dependency:
 ----
 
 We're using jackson because it is most popular JSON serializer for JavaEE projects.
+Sample json output, that will be logged to slf4j (TRACE, darwin.evolution):
+
+[source,json]
+----
+{
+	"name": "testEvolution",
+	"implementationPreference": "EVOLVED",
+	"timestamp": 1465313830367,
+	"resultType": "OK",
+	"protoplastDurationNs": 100,
+	"protoplastArguments": [1, 2],
+	"protoplastValue": "6",
+	"protplastException": null,
+	"evolvedDurationNs": 130,
+	"evolvedArguments": [1, 2],
+	"evolvedValue": "6",
+	"evolvedException": null
+}
+----
+
+=== Default result logging
+
+By default, results are logged in psv (pipe separated values) format, to slf4j.
+It logs in **TRACE** treshold under category: **darwin.evolution**
