@@ -5,7 +5,7 @@
     <groupId>com.github.darwin-evolution</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.1-SNAPSHOT</version>
+    <version>0.9.1</version>
 
     <name>Darwin - Root module</name>
     <description>Library that allows your code evolve. Test your new implementation in production environment. Measure and choose which result to return.</description>
@@ -43,7 +43,8 @@
         <connection>scm:git:git@github.com:darwin-evolution/darwin.git</connection>
         <url>scm:git:git@github.com:darwin-evolution/darwin.git</url>
         <developerConnection>scm:git:git@github.com:darwin-evolution/darwin.git</developerConnection>
-    </scm>
+      <tag>v0.9.1</tag>
+  </scm>
 
     <modules>
         <module>darwin</module>
