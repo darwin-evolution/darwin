@@ -56,7 +56,7 @@ public class EvolutionTest {
     }
 
     @Test
-    public void shouldEvolve() throws Exception {
+    public void shouldEvolveValidMax() throws Exception {
         final Integer a = 1, b = 3, c = -1;
 
         Integer max = Evolution.<Integer>of("calculateMax")
@@ -72,6 +72,28 @@ public class EvolutionTest {
                     public Integer execute() throws Exception {
                         arguments(a, b, c);
                         return calculateMax2(a, b, c);
+                    }
+                })
+                .evolve();
+    }
+
+    @Test
+    public void shouldEvolveBrokenMax() throws Exception {
+        final Integer a = 1, b = 3, c = -1;
+
+        Integer max = Evolution.<Integer>of("calculateMax")
+                .from(new ProtoplastExecutionHarness<Integer>() {
+                    @Override
+                    public Integer execute() throws Exception {
+                        arguments(a, b, c);
+                        return calculateMax(a, b, c);
+                    }
+                })
+                .to(new EvolvedExecutionHarness<Integer>() {
+                    @Override
+                    public Integer execute() throws Exception {
+                        arguments(a, b, c);
+                        return calculateMax2(a, b, c)-1;
                     }
                 })
                 .evolve();

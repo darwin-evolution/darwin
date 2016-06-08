@@ -66,7 +66,7 @@ we can write a simple evolution:
 <8> we execute evolved implementation
 <9> And we return configured result either (protoplast or evolved)
 
-Such configuration will result in slf4j log message in **trace** level in category **darwin.evolution** :
+Such configuration will result in slf4j log message (<<anchor-1,Layout explained here>>) in **trace** level in category **darwin.evolution**:
 
 [source,csv]
 ----
@@ -81,7 +81,7 @@ To choose which implementation's result should be returned to caller, Darwin use
 ImplementationChooser. By default it uses Typesafe Config, to lookup which
 implementation is preferred.
 
-
+.ImplementationChooser listing (https://github.com/darwin-evolution/darwin/blob/master/darwin/src/main/java/com/github/darwinevolution/darwin/api/ImplementationChooser.java[source])
 [source,java]
 ----
         public abstract class ImplementationChooser {
@@ -91,13 +91,8 @@ implementation is preferred.
         }
 ----
 
-
-Decision is made using implemntation of ImplementationChooser.chooseImplementation.
-Default implementation comes from TypesafeConfigImplementationChooser. You can configure
-your implementation chooser by supplying your own implementation of ImplementationChooser,
-or you can configure default chooser with config.
-
-Default chooser looks for configuration variable according to scheme:
+So to control which result should be returned you can either write your own implementation, or configure default.
+To return **evolved** implementation's result default chooser looks for configuration variable according to scheme:
 
 [source,java]
 ----
@@ -105,9 +100,11 @@ Default chooser looks for configuration variable according to scheme:
 ----
 
 Simplest way to provide it, is via system properties:
+
 [source,java]
 ----
-    -Ddarwin.evolution.calculateMax.evolved=true
+    -Ddarwin.evolution.calculateMax.evolved=true // evolved implementation result will be returned
+    -Ddarwin.evolution.calculateMax.evolved=false // protoplast implementation result will be returned
 ----
 
 or if you want to unleash full power of typesafe config go visit https://github.com/typesafehub/config[it's homepage.]
@@ -160,7 +157,7 @@ Sample json output, that will be logged to slf4j (TRACE, darwin.evolution):
 }
 ----
 
-=== Default result logging
+=== Default result logging layout [[anchor-1]]
 
 By default, results are logged in psv (pipe separated values) format, to slf4j.
 It logs in **TRACE** level under category: **darwin.evolution**.
@@ -194,3 +191,31 @@ Format is following:
 * evolved duration - duration of evolved execution in ns
 * evolved exception - message from exception thrown by evolved implementation
 * evolved value - **String.valueOf** from value retunred by evolved implementation
+
+Values effectively logged depend on provided configuration in https://github.com/darwin-evolution/darwin/blob/master/darwin/src/main/java/com/github/darwinevolution/darwin/api/ResultConsumerConfiguration.java[ResultConsumerConfiguration].
+Default behavoiur is:
+
+* if result is from OK_ family message will contain:
+** evolution name
+** choosen implementation
+** execution timestamp
+** result code
+** protoplast duration
+** evolved duration
+* if result is from ERROR family it will contain all fields
+
+
+
+.Sample log messages
+[source,java]
+----
+       "calculateMax"|"PROTOPLAST"|"1465408345511"|"OK"||"93591"||||"72753"||| //valid result
+       "calculateMax"|"PROTOPLAST"|"1465408345593"|"ERROR_DIFFERENT_RESULTS"|"[1,3,-1]"|"9352"|"3"||"[1,3,-1]"|"11835"|"2"|| //error result
+
+----
+
+
+
+=== Examples
+
+More examples can be found https://github.com/darwin-evolution/darwin/blob/master/darwin/src/test/java/com/github/darwinevolution/darwin/EvolutionTest.java[here.]
