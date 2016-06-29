@@ -10,6 +10,30 @@
     <artifactId>darwin</artifactId>
 
     <name>Darwin</name>
+    <description>Library that allows your code evolve. Test your new implementation in production environment. Measure and choose which result to return.</description>
+
+    <url>https://github.com/darwin-evolution/darwin</url>
+    <inceptionYear>2016</inceptionYear>
+
+    <organization>
+        <name>Darwin Project</name>
+        <url>https://github.com/darwin-evolution/darwin</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Damian Kolasa</name>
+            <url>https://groups.google.com/d/forum/darwin-evolution</url>
+        </developer>
+    </developers>
 
     <dependencies>
 

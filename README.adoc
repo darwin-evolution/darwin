@@ -5,10 +5,9 @@ image:https://img.shields.io/badge/license-MIT-brightgreen.svg[alt="MIT License"
 
 == Why?
 Darwin was creataed to ease refactoring. He allows You to test Your new
-implementation, in any environment, even in production. Darwin basically
-executes existing and new implementations comparing results, and logging
-the outcome. He allows you to choose which outcome to return, the 'evolved'
-or it's 'protoplast'.
+implementation, in any environment, even in production (that of course needs some care and caution).
+Darwin basically executes existing and new implementations (in sequence) comparing results, logging
+the outcome and returning value from choosen implementation.
 
 == How?
 
@@ -26,7 +25,8 @@ that's all he needs to help Your code Evolve!
 
 Basic idea in darwin is evolution, it is transition from **'protoplast'** to **'evolved'**
 implementation. This process is monitored and logged, increasing safety
-of your refactorings, and providing an easy way to test backward compatibility.
+of your refactorings, and providing an easy way to test backward compatibility,
+because by default it returns.
 
 
 ==== So evolve!
