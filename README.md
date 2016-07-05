@@ -49,4 +49,4 @@ Sample evolution:
 Damian Kolasa (@fatfredyy)
 
 ### Support or Contact
-Having trouble with Pages? Check out our [groups](https://groups.google.com/d/forum/darwin-evolution).
+Having trouble with Darwin? Check out our [groups](https://groups.google.com/d/forum/darwin-evolution).
