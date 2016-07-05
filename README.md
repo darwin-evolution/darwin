@@ -2,7 +2,14 @@
 ![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 
 ### Why ?
-Darwin was created to ease refactoring. He allows You to test Your new implementation, in any environment, even in production (that of course needs some care and caution). Darwin basically executes existing and new implementations (in sequence) comparing results, logging the outcome and returning value from chosen implementation to caller.
+Have you ever faced a situation when you wanted to refactor some code, but there were no testes, nobody
+actually knows what this code should do exactly, everybody wants to refactor it but they are all afraid 
+and don't want to risk ? Then this library is exactly for you! It allows you to write your new implementation
+and execute it in test harness alongside existing implementation (even in production environment), 
+returning values computed by original implementation, so nothing changes for end user. 
+Darwin will monitor and log all executions comparing results returned by both implementations.
+Logs will contain every information you need to decide if your implementation is mature enough to be used instead 
+of old one.
 
 ### How ?
 Add maven dependency:
