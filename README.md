@@ -24,25 +24,27 @@ Add maven dependency:
 
 Sample evolution:
 
-        final Integer a = 1, b = 3, c = -1;
+        import com.github.darwinevolution.darwin.Evolution;
+        
+        final Integer a = 1, b = 3, c = -1; //our execution arguments
 
-        Integer max = Evolution.<Integer>of("calculateMax")
-                .from(new ProtoplastExecutionHarness<Integer>() {
+        Integer max = Evolution.<Integer>of("calculateMax") // let's create evolution called "calculateMax"
+                .from(new ProtoplastExecutionHarness<Integer>() { // harnessing...
                     @Override
                     public Integer execute() throws Exception {
-                        arguments(a, b, c);
-                        return calculateMax(a, b, c);
+                        arguments(a, b, c); // providing arguments for logging and comparison purposes...
+                        return calculateMax(a, b, c); // current implementation
                     }
                 })
-                .to(new EvolvedExecutionHarness<Integer>() {
+                .to(new EvolvedExecutionHarness<Integer>() { // harnessing evolved piece of art...
                     @Override
                     public Integer execute() throws Exception {
-                        arguments(a, b, c);
-                        return calculateMax2(a, b, c);
+                        arguments(a, b, c); // again logging etc.
+                        return calculateMax2(a, b, c); // evolved implementation...
                     }
                 })
-                .evolve();
-
+                .evolve(); // execute both implementations, log execution details (compared results, time etc...) and return execution result 
+                            // by default we return old implementation's result
 
 
 ### Authors and Contributors
