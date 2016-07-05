@@ -26,11 +26,11 @@
 <a id="why-" class="anchor" href="#why-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why ?</h3>
 
 <p>Have you ever faced a situation when you wanted to refactor some code, but there were no testes, nobody
-actually knows what this code should do exactly, everybody wants to change it but they are all afraid 
+actually knows what this code should do exactly, everybody wants to refactor it but they are all afraid 
 and don't want to risk ? Then this library is exactly for you! It allows you to write your new implementation
-and execute it in test harness alongside existing implementation (you can deploy it even in production environment), 
+and execute it in test harness alongside existing implementation (even in production environment), 
 returning values computed by original implementation, so nothing changes for end user. 
-Darwin will monitor and log all executions, comparing results returned by both implementations.
+Darwin will monitor and log all executions comparing results returned by both implementations.
 Logs will contain every information you need to decide if your implementation is mature enough to be used instead 
 of old one.</p>
 
@@ -47,24 +47,28 @@ of old one.</p>
 
 <p>Sample evolution:</p>
 
-<pre><code>    final Integer a = 1, b = 3, c = -1;
+<pre><code>    import com.github.darwinevolution.darwin.Evolution;
 
-    Integer max = Evolution.&lt;Integer&gt;of("calculateMax")
-            .from(new ProtoplastExecutionHarness&lt;Integer&gt;() {
+    final Integer a = 1, b = 3, c = -1; //our execution arguments
+
+    Integer max = Evolution.&lt;Integer&gt;of("calculateMax") // let's create evolution called "calculateMax"
+            .from(new ProtoplastExecutionHarness&lt;Integer&gt;() { // harnessing...
                 @Override
                 public Integer execute() throws Exception {
-                    arguments(a, b, c);
-                    return calculateMax(a, b, c);
+                    arguments(a, b, c); // providing arguments for logging and comparison purposes...
+                    return calculateMax(a, b, c); // current implementation
                 }
             })
-            .to(new EvolvedExecutionHarness&lt;Integer&gt;() {
+            .to(new EvolvedExecutionHarness&lt;Integer&gt;() { // harnessing evolved piece of art...
                 @Override
                 public Integer execute() throws Exception {
-                    arguments(a, b, c);
-                    return calculateMax2(a, b, c);
+                    arguments(a, b, c); // again logging etc.
+                    return calculateMax2(a, b, c); // evolved implementation...
                 }
             })
-            .evolve();
+            .evolve(); // execute both implementations, 
+                       // log execution details (compared results, time etc...) and return execution result 
+                       // by default we return old implementation's result
 </code></pre>
 
 <h3>
