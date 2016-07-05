@@ -22,32 +22,35 @@ Add maven dependency:
 </dependency>
 ```
 
-Sample evolution:
+Write a sample evolution:
 
-        import com.github.darwinevolution.darwin.Evolution;
+    import com.github.darwinevolution.darwin.Evolution;
         
-        final Integer a = 1, b = 3, c = -1; //our execution arguments
+    final Integer a = 1, b = 3, c = -1; //our execution arguments
 
-        Integer max = Evolution.<Integer>of("calculateMax") // let's create evolution called "calculateMax"
-                .from(new ProtoplastExecutionHarness<Integer>() { // harnessing...
-                    @Override
-                    public Integer execute() throws Exception {
-                        arguments(a, b, c); // providing arguments for logging and comparison purposes...
-                        return calculateMax(a, b, c); // current implementation
-                    }
-                })
-                .to(new EvolvedExecutionHarness<Integer>() { // harnessing evolved piece of art...
-                    @Override
-                    public Integer execute() throws Exception {
-                        arguments(a, b, c); // again logging etc.
-                        return calculateMax2(a, b, c); // evolved implementation...
-                    }
-                })
-                .evolve(); // execute both implementations, log execution details (compared results, time etc...) and return execution result 
-                            // by default we return old implementation's result
+    Integer max = Evolution.<Integer>of("calculateMax") // let's create evolution called "calculateMax"
+            .from(new ProtoplastExecutionHarness<Integer>() { // harnessing...
+                @Override
+                public Integer execute() throws Exception {
+                    arguments(a, b, c); // providing arguments for logging and comparison purposes...
+                    return calculateMax(a, b, c); // current implementation
+                }
+            })
+            .to(new EvolvedExecutionHarness<Integer>() { // harnessing evolved piece of art...
+                @Override
+                public Integer execute() throws Exception {
+                    arguments(a, b, c); // again logging etc.
+                    return calculateMax2(a, b, c); // evolved implementation...
+                }
+            })
+            .evolve(); // execute both implementations, 
+                       // log execution details (compared results, time etc...) and return execution result 
+                       // by default we return old implementation's result
 
+By default Darwin will provide you with value returned from old implementation, and log details needed to determine
+stability of your new solution. 
 
-### Authors and Contributors
+## Authors and Contributors
 Damian Kolasa (@fatfredyy)
 
 ### Support or Contact
