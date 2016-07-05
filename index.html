@@ -45,34 +45,37 @@ of old one.</p>
     &lt;<span class="pl-ent">version</span>&gt;0.9.1&lt;/<span class="pl-ent">version</span>&gt;
 &lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
 
-<p>Sample evolution:</p>
+<p>Write a sample evolution:</p>
 
-<pre><code>    import com.github.darwinevolution.darwin.Evolution;
+<div class="highlight highlight-source-java"><pre>
+<span class="pl-k">import</span> <span class="pl-smi">com.github.darwinevolution.darwin.Evolution</span>;
 
-    final Integer a = 1, b = 3, c = -1; //our execution arguments
+<span class="pl-k">final</span> <span class="pl-smi">Integer</span> a <span class="pl-k">=</span> <span class="pl-c1">1</span>, b <span class="pl-k">=</span> <span class="pl-c1">3</span>, c <span class="pl-k">=</span> <span class="pl-k">-</span><span class="pl-c1">1</span>; <span class="pl-c">//our execution arguments</span>
 
-    Integer max = Evolution.&lt;Integer&gt;of("calculateMax") // let's create evolution called "calculateMax"
-            .from(new ProtoplastExecutionHarness&lt;Integer&gt;() { // harnessing...
-                @Override
-                public Integer execute() throws Exception {
-                    arguments(a, b, c); // providing arguments for logging and comparison purposes...
-                    return calculateMax(a, b, c); // current implementation
-                }
-            })
-            .to(new EvolvedExecutionHarness&lt;Integer&gt;() { // harnessing evolved piece of art...
-                @Override
-                public Integer execute() throws Exception {
-                    arguments(a, b, c); // again logging etc.
-                    return calculateMax2(a, b, c); // evolved implementation...
-                }
-            })
-            .evolve(); // execute both implementations, 
-                       // log execution details (compared results, time etc...) and return execution result 
-                       // by default we return old implementation's result
-</code></pre>
+<span class="pl-smi">Integer</span> max <span class="pl-k">=</span> <span class="pl-smi">Evolution</span><span class="pl-k">.</span><span class="pl-k">&lt;</span><span class="pl-smi">Integer</span><span class="pl-k">&gt;</span>of(<span class="pl-s"><span class="pl-pds">"</span>calculateMax<span class="pl-pds">"</span></span>) <span class="pl-c">// let's create evolution called "calculateMax"</span>
+        .from(<span class="pl-k">new</span> <span class="pl-k">ProtoplastExecutionHarness&lt;<span class="pl-smi">Integer</span>&gt;</span>() { <span class="pl-c">// harnessing...</span>
+            <span class="pl-k">@Override</span>
+            <span class="pl-k">public</span> <span class="pl-smi">Integer</span> <span class="pl-en">execute</span>() <span class="pl-k">throws</span> <span class="pl-smi">Exception</span> {
+                arguments(a, b, c); <span class="pl-c">// providing arguments for logging and comparison purposes...</span>
+                <span class="pl-k">return</span> calculateMax(a, b, c); <span class="pl-c">// current implementation</span>
+            }
+        })
+        .to(<span class="pl-k">new</span> <span class="pl-k">EvolvedExecutionHarness&lt;<span class="pl-smi">Integer</span>&gt;</span>() { <span class="pl-c">// harnessing evolved piece of art...</span>
+            <span class="pl-k">@Override</span>
+            <span class="pl-k">public</span> <span class="pl-smi">Integer</span> <span class="pl-en">execute</span>() <span class="pl-k">throws</span> <span class="pl-smi">Exception</span> {
+                arguments(a, b, c); <span class="pl-c">// again logging etc.</span>
+                <span class="pl-k">return</span> calculateMax2(a, b, c); <span class="pl-c">// evolved implementation...</span>
+            }
+        })
+        .evolve(); <span class="pl-c">// execute both implementations, </span>
+                   <span class="pl-c">// log execution details (compared results, time etc...) and return execution result </span>
+                   <span class="pl-c">// by default we return old implementation's                        </span></pre></div>
 
-<h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<p>By default Darwin will provide you with value returned from old implementation, and log details needed to determine
+stability of your new solution. </p>
+
+<h2>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h2>
 
 <p>Damian Kolasa (<a href="https://github.com/fatfredyy" class="user-mention">@fatfredyy</a>)</p>
 
