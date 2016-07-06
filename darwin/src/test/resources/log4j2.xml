@@ -5,8 +5,8 @@
             <PatternLayout pattern="%msg%n"/>
         </Console>
     </Appenders>
-    <Loggers>
 
+    <Loggers>
         <Logger name="darwin.evolution" level="trace" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
