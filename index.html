@@ -19,25 +19,43 @@
     </section>
 
     <section class="main-content">
-      <p><img src="https://travis-ci.org/darwin-evolution/darwin.svg" alt="Travis">
-<img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License"></p>
+      <p><a href="https://travis-ci.org/darwin-evolution/darwin"><img src="https://travis-ci.org/darwin-evolution/darwin.svg?branch=master" alt="Build Status"></a>
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License"></a>
+<a href="http://javadoc.io/doc/com.github.darwin-evolution/darwin"><img src="http://javadoc.io/badge/com.github.darwin-evolution/darwin.svg" alt="Javadocs"></a></p>
 
-<h3>
-<a id="why-" class="anchor" href="#why-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why ?</h3>
+<h2>
+<a id="the-problem" class="anchor" href="#the-problem" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The Problem</h2>
 
-<p>Have you ever faced a situation when you wanted to refactor some code, but there were no testes, nobody
-actually knows what this code should do exactly, everybody wants to refactor it but they are all afraid 
-and don't want to risk ? Then this library is exactly for you! It allows you to write your new implementation
-and execute it in test harness alongside existing implementation (even in production environment), 
-returning values computed by original implementation, so nothing changes for end user. 
-Darwin will monitor and log all executions comparing results returned by both implementations.
-Logs will contain every information you need to decide if your implementation is mature enough to be used instead 
-of old one.</p>
+<p>How to test refactored code that originally had no tests, unclear specification, no owner, and just begged to end it's misery ?</p>
 
-<h3>
-<a id="how-" class="anchor" href="#how-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How ?</h3>
+<h2>
+<a id="solution" class="anchor" href="#solution" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Solution</h2>
 
-<p>Add maven dependency:</p>
+<p>Let the the users do it for you! All you need are few steps.</p>
+
+<h4>
+<a id="identify-your-enemy" class="anchor" href="#identify-your-enemy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Identify your enemy</h4>
+
+<div class="highlight highlight-source-java"><pre>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">RentalDiscountService</span> {
+
+    <span class="pl-c">// help needed!! but to be honest, it could've been worse...</span>
+    <span class="pl-k">public</span> <span class="pl-smi">Double</span> <span class="pl-en">calculateDiscountPercent</span>(<span class="pl-smi">Integer</span> <span class="pl-v">movieType</span>, <span class="pl-smi">Integer</span> <span class="pl-v">rentalPeriod</span>) {
+        <span class="pl-k">if</span> (movieType <span class="pl-k">==</span> <span class="pl-c1">1</span> <span class="pl-k">||</span> (movieType <span class="pl-k">!=</span> <span class="pl-c1">3</span> <span class="pl-k">&amp;&amp;</span>  rentalPeriod <span class="pl-k">==</span> <span class="pl-k">-</span><span class="pl-c1">1</span>)) {
+            <span class="pl-k">return</span> <span class="pl-c1">10.0</span>;
+        } <span class="pl-k">else</span> <span class="pl-k">if</span> (movieType <span class="pl-k">==</span> <span class="pl-c1">2</span> <span class="pl-k">&amp;&amp;</span> rentalPeriod <span class="pl-k">==</span> <span class="pl-c1">1</span>) {
+            <span class="pl-k">return</span> <span class="pl-c1">40.0</span>;
+        } <span class="pl-k">else</span> <span class="pl-k">if</span> (movieType <span class="pl-k">==</span> <span class="pl-c1">4</span> <span class="pl-k">&amp;&amp;</span> rentalPeriod <span class="pl-k">&gt;</span> <span class="pl-c1">10</span>) {
+            <span class="pl-k">return</span> <span class="pl-c1">5.0</span>;
+        } <span class="pl-k">else</span> {
+            <span class="pl-k">return</span> <span class="pl-c1">0.0</span>;
+        }
+    }
+}
+</pre></div>
+
+<h4>
+<a id="add-maven-dependency" class="anchor" href="#add-maven-dependency" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Add maven dependency</h4>
 
 <div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
     &lt;<span class="pl-ent">groupId</span>&gt;com.github.darwin-evolution&lt;/<span class="pl-ent">groupId</span>&gt;
@@ -45,34 +63,129 @@ of old one.</p>
     &lt;<span class="pl-ent">version</span>&gt;0.9.1&lt;/<span class="pl-ent">version</span>&gt;
 &lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
 
-<p>Write a sample evolution:</p>
+<h4>
+<a id="create-art-not-code" class="anchor" href="#create-art-not-code" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create art not code</h4>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">RentalDiscountCalculator</span> {
+
+    <span class="pl-k">private</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">BigDecimal</span> <span class="pl-c1">NO_DISCOUNT</span> <span class="pl-k">=</span> <span class="pl-smi">BigDecimal</span><span class="pl-c1"><span class="pl-k">.</span>ZERO</span>;
+    <span class="pl-k">private</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">BigDecimal</span> <span class="pl-c1">WEEKEND_DISCOUNT</span> <span class="pl-k">=</span> <span class="pl-smi">BigDecimal</span><span class="pl-c1"><span class="pl-k">.</span>TEN</span>;
+    <span class="pl-k">private</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">BigDecimal</span> <span class="pl-c1">ROMANTIC_EVENING_DISCOUNT</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">BigDecimal</span>(<span class="pl-c1">40.0</span>);
+    <span class="pl-k">private</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">BigDecimal</span> <span class="pl-c1">FAMILY_WEEK</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">BigDecimal</span>(<span class="pl-c1">5.0</span>);
+
+    <span class="pl-c">//piece of art, not code... (please don't judge)</span>
+    <span class="pl-k">public</span> <span class="pl-smi">BigDecimal</span> <span class="pl-en">calculateDiscount</span>(<span class="pl-smi">MovieType</span> <span class="pl-v">movieType</span>, <span class="pl-smi">RentalPeriod</span> <span class="pl-v">rentalPeriod</span>) {
+        <span class="pl-k">if</span> (movieType<span class="pl-k">.</span>equals(<span class="pl-smi">MovieType</span><span class="pl-c1"><span class="pl-k">.</span>COMEDY</span>)
+                <span class="pl-k">||</span> (<span class="pl-k">!</span>movieType<span class="pl-k">.</span>equals(<span class="pl-smi">MovieType</span><span class="pl-c1"><span class="pl-k">.</span>HORROR</span>) <span class="pl-k">&amp;&amp;</span> rentalPeriod<span class="pl-k">.</span>isWeekend())) {
+            <span class="pl-k">return</span> <span class="pl-c1">WEEKEND_DISCOUNT</span>;
+        }
+
+        <span class="pl-k">if</span> (movieType<span class="pl-k">.</span>equals(<span class="pl-smi">MovieType</span><span class="pl-c1"><span class="pl-k">.</span>ROMANCE</span>) <span class="pl-k">&amp;&amp;</span> rentalPeriod<span class="pl-k">.</span>isOverNight()) {
+            <span class="pl-k">return</span> <span class="pl-c1">ROMANTIC_EVENING_DISCOUNT</span>;
+        }
+
+        <span class="pl-k">if</span> (movieType<span class="pl-k">.</span>equals(<span class="pl-smi">MovieType</span><span class="pl-c1"><span class="pl-k">.</span>FAMILY</span>) <span class="pl-k">&amp;&amp;</span> rentalPeriod<span class="pl-k">.</span>isLongRental())  {
+            <span class="pl-k">return</span> <span class="pl-c1">FAMILY_WEEK</span>;
+        }
+
+        <span class="pl-k">return</span> <span class="pl-c1">NO_DISCOUNT</span>;
+    }
+}
+</pre></div>
+
+<h4>
+<a id="write-evolution" class="anchor" href="#write-evolution" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Write evolution</h4>
+
+<p>We encapsulate both implementations in single evolution, in order to test and measure them. 
+Both implementations are executed in sequence, starting with legacy one.</p>
 
 <div class="highlight highlight-source-java"><pre>
 <span class="pl-k">import</span> <span class="pl-smi">com.github.darwinevolution.darwin.Evolution</span>;
+<span class="pl-k">import</span> <span class="pl-smi">com.github.darwinevolution.darwin.execution.harness.EvolvedExecutionHarness</span>;
+<span class="pl-k">import</span> <span class="pl-smi">com.github.darwinevolution.darwin.execution.harness.ProtoplastExecutionHarness</span>;
 
-<span class="pl-k">final</span> <span class="pl-smi">Integer</span> a <span class="pl-k">=</span> <span class="pl-c1">1</span>, b <span class="pl-k">=</span> <span class="pl-c1">3</span>, c <span class="pl-k">=</span> <span class="pl-k">-</span><span class="pl-c1">1</span>; <span class="pl-c">//our execution arguments</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">RentalDiscountService</span> {
 
-<span class="pl-smi">Integer</span> max <span class="pl-k">=</span> <span class="pl-smi">Evolution</span><span class="pl-k">.</span><span class="pl-k">&lt;</span><span class="pl-smi">Integer</span><span class="pl-k">&gt;</span>of(<span class="pl-s"><span class="pl-pds">"</span>calculateMax<span class="pl-pds">"</span></span>) <span class="pl-c">// let's create evolution called "calculateMax"</span>
-        .from(<span class="pl-k">new</span> <span class="pl-k">ProtoplastExecutionHarness&lt;<span class="pl-smi">Integer</span>&gt;</span>() { <span class="pl-c">// harnessing...</span>
-            <span class="pl-k">@Override</span>
-            <span class="pl-k">public</span> <span class="pl-smi">Integer</span> <span class="pl-en">execute</span>() <span class="pl-k">throws</span> <span class="pl-smi">Exception</span> {
-                arguments(a, b, c); <span class="pl-c">// providing arguments for logging and comparison purposes...</span>
-                <span class="pl-k">return</span> calculateMax(a, b, c); <span class="pl-c">// current implementation</span>
-            }
-        })
-        .to(<span class="pl-k">new</span> <span class="pl-k">EvolvedExecutionHarness&lt;<span class="pl-smi">Integer</span>&gt;</span>() { <span class="pl-c">// harnessing evolved piece of art...</span>
-            <span class="pl-k">@Override</span>
-            <span class="pl-k">public</span> <span class="pl-smi">Integer</span> <span class="pl-en">execute</span>() <span class="pl-k">throws</span> <span class="pl-smi">Exception</span> {
-                arguments(a, b, c); <span class="pl-c">// again logging etc.</span>
-                <span class="pl-k">return</span> calculateMax2(a, b, c); <span class="pl-c">// evolved implementation...</span>
-            }
-        })
-        .evolve(); <span class="pl-c">// execute both implementations, </span>
-                   <span class="pl-c">// log execution details (compared results, time etc...) and return execution result </span>
-                   <span class="pl-c">// by default we return old implementation's                        </span></pre></div>
+    <span class="pl-k">private</span> <span class="pl-smi">RentalDiscountCalculator</span> rentalDiscountCalculator;
 
-<p>By default Darwin will provide you with value returned from old implementation, and log details needed to determine
-stability of your new solution. </p>
+    <span class="pl-c">// we rule don't we?</span>
+    <span class="pl-k">public</span> <span class="pl-smi">Double</span> <span class="pl-en">calculateDiscountPercent</span>(<span class="pl-k">final</span> <span class="pl-smi">Integer</span> <span class="pl-v">movieType</span>, <span class="pl-k">final</span> <span class="pl-smi">Integer</span> <span class="pl-v">rentalPeriod</span>) <span class="pl-k">throws</span> <span class="pl-smi">Exception</span> {
+        <span class="pl-k">return</span> <span class="pl-smi">Evolution</span><span class="pl-k">.</span><span class="pl-k">&lt;</span><span class="pl-smi">Double</span><span class="pl-k">&gt;</span>of(<span class="pl-s"><span class="pl-pds">"</span>calculateDiscountPercent<span class="pl-pds">"</span></span>)
+                .from(<span class="pl-k">new</span> <span class="pl-k">ProtoplastExecutionHarness&lt;<span class="pl-smi">Double</span>&gt;</span>() {
+                    <span class="pl-k">@Override</span>
+                    <span class="pl-k">public</span> <span class="pl-smi">Double</span> <span class="pl-en">execute</span>() <span class="pl-k">throws</span> <span class="pl-smi">Exception</span> {
+                        arguments(movieType, rentalPeriod); <span class="pl-c">// arguments for logging purposes</span>
+
+                        <span class="pl-c">// run our legacy implementation</span>
+                        <span class="pl-k">return</span> legacyCalculateDiscountPercent(movieType, rentalPeriod); 
+                    }
+                })<span class="pl-k">.</span>to(<span class="pl-k">new</span> <span class="pl-k">EvolvedExecutionHarness&lt;<span class="pl-smi">Double</span>&gt;</span>() {
+                    <span class="pl-k">@Override</span>
+                    <span class="pl-k">public</span> <span class="pl-smi">Double</span> <span class="pl-en">execute</span>() <span class="pl-k">throws</span> <span class="pl-smi">Exception</span> {
+                        arguments(movieType, rentalPeriod); <span class="pl-c">// arguments for logging purposes</span>
+
+                        <span class="pl-c">// unleash the beauty!</span>
+                        <span class="pl-k">return</span> rentalDiscountCalculator<span class="pl-k">.</span>calculateDiscount(<span class="pl-smi">MovieTypeFactory</span><span class="pl-k">.</span>from(movieType), 
+                            <span class="pl-smi">RentalPeriod</span><span class="pl-k">.</span>from(rentalPeriod))<span class="pl-k">.</span>doubleValue();
+                    }
+                })<span class="pl-k">.</span>evolve();
+    }
+
+    <span class="pl-c">// we need to extract it and contain it, before it spreads around all our system...</span>
+    <span class="pl-k">private</span> <span class="pl-smi">Double</span> <span class="pl-en">legacyCalculateDiscountPercent</span>(<span class="pl-smi">Integer</span> <span class="pl-v">movieType</span>, <span class="pl-smi">Integer</span> <span class="pl-v">rentalPeriod</span>) {
+        <span class="pl-k">if</span> (movieType <span class="pl-k">==</span> <span class="pl-c1">1</span> <span class="pl-k">||</span> (movieType <span class="pl-k">!=</span> <span class="pl-c1">3</span> <span class="pl-k">&amp;&amp;</span> rentalPeriod <span class="pl-k">==</span> <span class="pl-k">-</span><span class="pl-c1">1</span>)) {
+            <span class="pl-k">return</span> <span class="pl-c1">10.0</span>;
+        } <span class="pl-k">else</span> <span class="pl-k">if</span> (movieType <span class="pl-k">==</span> <span class="pl-c1">2</span> <span class="pl-k">&amp;&amp;</span> rentalPeriod <span class="pl-k">==</span> <span class="pl-c1">1</span>) {
+            <span class="pl-k">return</span> <span class="pl-c1">40.0</span>;
+        } <span class="pl-k">else</span> <span class="pl-k">if</span> (movieType <span class="pl-k">==</span> <span class="pl-c1">4</span> <span class="pl-k">&amp;&amp;</span> rentalPeriod <span class="pl-k">&gt;</span> <span class="pl-c1">10</span>) {
+            <span class="pl-k">return</span> <span class="pl-c1">5.0</span>;
+        } <span class="pl-k">else</span> {
+            <span class="pl-k">return</span> <span class="pl-c1">0.0</span>;
+        }
+    }
+}</pre></div>
+
+<h4>
+<a id="configure-logger" class="anchor" href="#configure-logger" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configure logger</h4>
+
+<p>Results of our evolution executions will be logged here...</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">Loggers</span>&gt;
+    &lt;<span class="pl-ent">Logger</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>darwin.evolution<span class="pl-pds">"</span></span> <span class="pl-e">level</span>=<span class="pl-s"><span class="pl-pds">"</span>trace<span class="pl-pds">"</span></span> <span class="pl-e">additivity</span>=<span class="pl-s"><span class="pl-pds">"</span>false<span class="pl-pds">"</span></span>&gt;
+        ...
+    &lt;/<span class="pl-ent">Logger</span>&gt;
+&lt;/<span class="pl-ent">Loggers</span>&gt;</pre></div>
+
+<h4>
+<a id="build-it-ship-it" class="anchor" href="#build-it-ship-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build it, ship it</h4>
+
+<p>Build your app and install in any environment (dev, qa, prod).</p>
+
+<h4>
+<a id="analyze-produced-logs" class="anchor" href="#analyze-produced-logs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Analyze produced logs</h4>
+
+<p>When someone executes our <strong>RentalDiscountService.calculateDiscountPercent</strong> method, 
+our logs will contain entries like this (<a href="https://github.com/darwin-evolution/darwin#anchor-1">more info</a>)</p>
+
+<blockquote>
+<p>"calculateDiscountPercent"|"PROTOPLAST"|"1463682597919"|"OK"||"249896"||||"171597"|||</p>
+</blockquote>
+
+<p>You noticed big juicy <strong>OK</strong>? It means values returned by both implementations were equal, so we've just tested our new code
+without moving a finger. It's nice to have users...</p>
+
+<h4>
+<a id="remove-old-implementation" class="anchor" href="#remove-old-implementation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Remove old implementation</h4>
+
+<p>After incubation period, may it be a week or a month, when you see in logs that every call
+behaved exactly the same as the old one (or even better) you can 
+safely delete all traces of old implementation alongside evolution associated with it.
+And now you are one step closer to perfection!</p>
+
+<h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h2>
+
+<p>Visit our project <a href="https://github.com/darwin-evolution/darwin">page</a>.</p>
 
 <h2>
 <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h2>
